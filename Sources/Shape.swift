@@ -81,8 +81,10 @@ public struct CollissionDetectionCommand: Command {
         let centerPoints = moveables.map { $0.center }
         self.command = BlockCommand(
             command: {
+                // we assume a collission if any object has the same center as the first object
                 guard moveables.filter({ $0.center == moveables[0].center }).count > 1 else { return }
 
+                // simulate asynchronous execution
                 let deadlineTime = DispatchTime.now() + .seconds(1)
                 DispatchQueue.main.asyncAfter(deadline: deadlineTime) {
                     for (index, moveable) in moveables.enumerated() {
@@ -110,6 +112,7 @@ public struct LayoutCommand: Command {
     private let command: Command
 
     public init(moveables: [Moveable], target: CGPoint) {
+        // Layout = Move objects + Collission Detection
         let moveCommands = moveables.map { moveable -> MoveCommand in
             let offsetToTarget = CGVector(dx: target.x - moveable.center.x, dy: target.y - moveable.center.y)
             return MoveCommand(moveable: moveable, offset: offsetToTarget)
