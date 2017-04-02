@@ -13,7 +13,9 @@ import Foundation
 
 public protocol Moveable: class {
 
-    func move(by offset: CGPoint)
+    var center: CGPoint { get set }
+
+    func move(by offset: CGVector)
 }
 
 public protocol Displayable: class {
@@ -23,11 +25,11 @@ public protocol Displayable: class {
 
 public class Shape: Moveable, Displayable {
 
-    var origin: CGPoint = .zero
+    public var center: CGPoint = .zero
     public var title: String = ""
 
-    public func move(by offset: CGPoint) {
-        self.origin = self.origin.applying(.init(translationX: offset.x, y: offset.y))
+    public func move(by offset: CGVector) {
+        self.center = self.center.applying(.init(translationX: offset.dx, y: offset.dy))
     }
 }
 
@@ -35,11 +37,12 @@ public class Shape: Moveable, Displayable {
 
 public struct MoveCommand: Command {
 
-    private let command: BlockCommand
+    private let command: Command
 
-    public init(moveable: Moveable, offset: CGPoint) {
+    public init(moveable: Moveable, offset: CGVector) {
+        let inverseOffset = CGVector(dx: -offset.dx, dy: -offset.dy)
         self.command = BlockCommand(command: { moveable.move(by: offset) },
-                                    inverseCommand: { moveable.move(by: CGPoint(x: -offset.x, y: -offset.y)) })
+                                    inverseCommand: { moveable.move(by: inverseOffset) })
     }
 
     public func invoke() {
@@ -53,12 +56,66 @@ public struct MoveCommand: Command {
 
 public struct UpdateTitleCommand: Command {
 
-    private let command: BlockCommand
+    private let command: Command
 
     public init(displayable: Displayable, title: String) {
         let currentTitle = displayable.title
         self.command = BlockCommand(command: { displayable.title = title },
                                     inverseCommand: { displayable.title = currentTitle })
+    }
+
+    public func invoke() {
+        self.command.invoke()
+    }
+
+    public func inversed() -> Command {
+        return self.command.inversed()
+    }
+}
+
+public struct CollissionDetectionCommand: Command {
+
+    private let command: Command
+
+    public init(moveables: [Moveable]) {
+        let centerPoints = moveables.map { $0.center }
+        self.command = BlockCommand(
+            command: {
+                guard moveables.filter({ $0.center == moveables[0].center }).count > 1 else { return }
+
+                let deadlineTime = DispatchTime.now() + .seconds(1)
+                DispatchQueue.main.asyncAfter(deadline: deadlineTime) {
+                    for (index, moveable) in moveables.enumerated() {
+                        moveable.move(by: CGVector(dx: index * 100, dy: 0))
+                    }
+                }
+        }, inverseCommand: {
+            zip(moveables, centerPoints).forEach { moveable, center in
+                moveable.center = center
+            }
+        })
+    }
+
+    public func invoke() {
+        self.command.invoke()
+    }
+
+    public func inversed() -> Command {
+        return self.command.inversed()
+    }
+}
+
+public struct LayoutCommand: Command {
+
+    private let command: Command
+
+    public init(moveables: [Moveable], target: CGPoint) {
+        let moveCommands = moveables.map { moveable -> MoveCommand in
+            let offsetToTarget = CGVector(dx: target.x - moveable.center.x, dy: target.y - moveable.center.y)
+            return MoveCommand(moveable: moveable, offset: offsetToTarget)
+        }
+
+        self.command = GroupCommand(commands: moveCommands + [CollissionDetectionCommand(moveables: moveables)])
     }
 
     public func invoke() {
