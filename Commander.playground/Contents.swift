@@ -21,7 +21,7 @@ protocol Command: CustomStringConvertible {
 extension Command {
 
     var description: String {
-        return "Command of type '\(type(of: self))'"
+        return "Command <\(type(of: self))>"
     }
 }
 
@@ -56,6 +56,7 @@ struct BlockCommand: Command {
     }
 
     func invoke() {
+        print("Invoking \(self)")
         self.command()
     }
 
@@ -82,41 +83,6 @@ struct GroupCommand: Command {
         return GroupCommand(commands: inversedCommands)
     }
 }
-
-// MARK: - Concrete Commands
-
-protocol Moveable {
-
-    func move(by offset: CGPoint)
-}
-
-class Shape: Moveable {
-
-    var origin: CGPoint = .zero
-
-    func move(by offset: CGPoint) {
-        self.origin = self.origin.applying(.init(translationX: offset.x, y: offset.y))
-    }
-}
-
-struct MoveCommand: Command {
-
-    private let command: BlockCommand
-
-    init(moveable: Moveable, offset: CGPoint) {
-        self.command = BlockCommand(command: { moveable.move(by: offset) },
-                                    inverseCommand: { moveable.move(by: CGPoint(x: -offset.x, y: -offset.y)) })
-    }
-
-    func invoke() {
-        self.command.invoke()
-    }
-
-    func inversed() -> Command {
-        return self.command.inversed()
-    }
-}
-
 
 final class CommandInvoker {
 
@@ -155,6 +121,65 @@ final class CommandInvoker {
     }
 }
 
+// MARK: - Concrete Commands
+
+protocol Moveable: class {
+
+    func move(by offset: CGPoint)
+}
+
+protocol Displayable: class {
+
+    var title: String { get set }
+}
+
+class Shape: Moveable, Displayable {
+
+    var origin: CGPoint = .zero
+    var title: String = ""
+
+    func move(by offset: CGPoint) {
+        self.origin = self.origin.applying(.init(translationX: offset.x, y: offset.y))
+    }
+}
+
+struct MoveCommand: Command {
+
+    private let command: BlockCommand
+
+    init(moveable: Moveable, offset: CGPoint) {
+        self.command = BlockCommand(command: { moveable.move(by: offset) },
+                                    inverseCommand: { moveable.move(by: CGPoint(x: -offset.x, y: -offset.y)) })
+    }
+
+    func invoke() {
+        self.command.invoke()
+    }
+
+    func inversed() -> Command {
+        return self.command.inversed()
+    }
+}
+
+struct UpdateTitleCommand: Command {
+
+    private let command: BlockCommand
+
+    init(displayable: Displayable, title: String) {
+        let currentTitle = displayable.title
+        self.command = BlockCommand(command: { displayable.title = title },
+                                    inverseCommand: { displayable.title = currentTitle })
+    }
+
+    func invoke() {
+        self.command.invoke()
+    }
+
+    func inversed() -> Command {
+        return self.command.inversed()
+    }
+}
+
 
 //  MARK: - Tests
 
@@ -166,8 +191,11 @@ let shape = Shape()
 let commander = CommandInvoker()
 let move = MoveCommand(moveable: shape, offset: CGPoint(x: 10.0, y: 5.0))
 
+// preconditions
 expect(shape.origin == .zero)
+expect(shape.title == "")
 
+// test command execution
 commander.invoke(command: move)
 expect(shape.origin == CGPoint(x: 10.0, y: 5.0))
 expect(commander.commands.count == 1)
@@ -178,16 +206,19 @@ expect(shape.origin == CGPoint(x: 20.0, y: 10.0))
 expect(commander.commands.count == 2)
 expect(commander.undoneCommands.count == 0)
 
+// test undo
 try! commander.undo()
 expect(shape.origin == CGPoint(x: 10.0, y: 5.0))
 expect(commander.commands.count == 1)
 expect(commander.undoneCommands.count == 1)
 
+// test redo
 try! commander.redo()
 expect(shape.origin == CGPoint(x: 20.0, y: 10.0))
 expect(commander.commands.count == 2)
 expect(commander.undoneCommands.count == 0)
 
+// test grouping
 let groupedIdentityMove = GroupCommand(commands: [move, move.inversed()])
 commander.invoke(command: groupedIdentityMove)
 expect(shape.origin == CGPoint(x: 20.0, y: 10.0))
@@ -200,7 +231,27 @@ expect(shape.origin == .zero)
 expect(commander.commands.count == 4)
 expect(commander.undoneCommands.count == 0)
 
+// test undo loop
 while !commander.commands.isEmpty { try! commander.undo() }
 expect(shape.origin == .zero)
 expect(commander.commands.count == 0)
 expect(commander.undoneCommands.count == 4)
+
+// test undo/redo counts
+try! commander.redo(numberOfCommands: 4)
+expect(shape.origin == .zero)
+expect(commander.commands.count == 4)
+expect(commander.undoneCommands.count == 0)
+
+try! commander.undo(numberOfCommands: 4)
+expect(shape.origin == .zero)
+expect(commander.commands.count == 0)
+expect(commander.undoneCommands.count == 4)
+
+// test title setting
+let updateTitle = UpdateTitleCommand(displayable: shape, title: "A Shape")
+commander.invoke(command: updateTitle)
+expect(shape.origin == .zero)
+expect(shape.title == "A Shape")
+expect(commander.commands.count == 1)
+expect(commander.undoneCommands.count == 0)
