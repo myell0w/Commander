@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "1D707FE43680C8839CD798E7E8A8E59DA6C70B04",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "1D707FE43680C8839CD798E7E8A8E59DA6C70B04" : 9223372036854775807,
+    "D82FBA1D564010794C47F492232DBF33BE5A7688" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "64AB9F46-DBAF-403C-9BDE-C67D90A9EA8C",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "1D707FE43680C8839CD798E7E8A8E59DA6C70B04" : "Commander\/",
+    "D82FBA1D564010794C47F492232DBF33BE5A7688" : "Commander\/.build\/checkouts\/Promise.git-2820548963726085300\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "Commander",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Commander.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:myell0w\/Commander.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "1D707FE43680C8839CD798E7E8A8E59DA6C70B04"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "\/Users\/myell0w\/Development\/Commander\/.build\/repositories\/Promise.git-2820548963726085300",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "D82FBA1D564010794C47F492232DBF33BE5A7688"
+    }
+  ]
+}

@@ -9,7 +9,7 @@
 import Foundation
 
 
-/// A command that can executes a block
+/// A command that can execute a block
 public struct BlockCommand: Command {
 
     public typealias Block = (Void) -> Void
