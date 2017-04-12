@@ -23,7 +23,6 @@ public struct BlockCommand: Command {
     }
 
     public func invoke() {
-        // print("Invoking \(self)")
         self.command()
     }
 

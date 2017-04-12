@@ -9,6 +9,11 @@ import Foundation
 
 
 func main() {
+    testBasics()
+    testLayout()
+}
+
+private func testBasics() {
     let shape = Shape()
     let commander = CommandDispatcher()
 
@@ -84,6 +89,30 @@ func main() {
     expect(shape.title == "A New Shape")
     try! commander.undo()
     expect(shape.title == "A Shape")
+}
+
+private func testLayout() {
+    let shapes = [Shape(), Shape(), Shape(), Shape(), Shape(), Shape(), Shape(), Shape(), Shape(), Shape()]
+    let commander = CommandDispatcher()
+
+    for (index, shape) in zip(shapes.indices, shapes) {
+        shape.title = "#\(index)"
+        expect(shape.center == .zero, description: "Verifying Inital state for layout")
+    }
+
+    let layoutCommand = LayoutCommand(moveables: shapes, target: .zero)
+    commander.invoke(command: layoutCommand)
+
+    for (index, shape) in zip(shapes.indices, shapes) {
+        expect(shape.center.x == 0)
+        expect(shape.center.y == CGFloat(index * 10))
+    }
+
+    try! commander.undo()
+
+    for shape in shapes {
+        expect(shape.center == .zero)
+    }
 }
 
 @discardableResult

@@ -22,3 +22,18 @@ extension Command {
         return "Command <\(type(of: self))>"
     }
 }
+
+public protocol WrapperCommand: Command {
+    var command: Command { get }
+}
+
+extension WrapperCommand {
+
+    public func invoke() {
+        self.command.invoke()
+    }
+
+    public func inversed() -> Command {
+        return self.command.inversed()
+    }
+}
