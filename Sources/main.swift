@@ -9,7 +9,7 @@ import Foundation
 
 
 func main() {
-    testBasics()
+    //testBasics()
     testLayout()
 }
 
@@ -103,12 +103,16 @@ private func testLayout() {
     let layoutCommand = LayoutCommand(moveables: shapes, target: .zero)
     commander.invoke(command: layoutCommand)
 
-    for (index, shape) in zip(shapes.indices, shapes) {
-        expect(shape.center.x == 0)
-        expect(shape.center.y == CGFloat(index * 10))
-    }
+//    Thread.sleep(forTimeInterval: 1.0)
+//
+//    for (index, shape) in zip(shapes.indices, shapes) {
+//        expect(shape.center.x == CGFloat(index * 100))
+//        expect(shape.center.y == CGFloat(index * 10))
+//    }
 
     try! commander.undo()
+
+    Thread.sleep(forTimeInterval: 1.0)
 
     for shape in shapes {
         expect(shape.center == .zero)

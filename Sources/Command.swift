@@ -9,6 +9,8 @@
 import Foundation
 
 
+// MARK: - Command
+
 /// The base interface for any executable command
 public protocol Command: class, CustomStringConvertible {
 
@@ -26,6 +28,20 @@ extension Command {
     }
 }
 
+// MARK: - AsyncCommand
+
+/// The base interface for a command with an asynchronous execution
+
+public protocol AsyncCommand: Command {
+
+    var canceled: Bool { get }
+
+    func cancel()
+}
+
+// MARK: - WrapperCommand
+
+/// The base (convenience) interface for a command that internally wraps another command
 public protocol WrapperCommand: Command {
 
     var command: Command { get }

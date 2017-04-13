@@ -37,6 +37,10 @@ extension CommandDispatcher {
 
         let commandsToUndo = self.commands.remove(last: numberOfCommands).reversed()
         commandsToUndo.forEach { command in
+            if let asyncCommand = command as? AsyncCommand {
+                asyncCommand.cancel()
+            }
+            
             command.inversed().invoke()
             self.undoneCommands.append(command)
         }

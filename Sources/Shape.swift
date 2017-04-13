@@ -13,6 +13,7 @@ import Foundation
 
 public protocol Moveable: class {
 
+    var uuid: UUID { get }
     var center: CGPoint { get set }
 
     func move(by offset: CGVector)
@@ -25,6 +26,7 @@ public protocol Displayable: class {
 
 public final class Shape: Moveable, Displayable, CustomStringConvertible {
 
+    private(set) public var uuid = UUID()
     public var center: CGPoint = .zero
     public var title: String = ""
 
@@ -33,7 +35,7 @@ public final class Shape: Moveable, Displayable, CustomStringConvertible {
     }
 
     public var description: String {
-        return "<Shape \(self.title), center = \(self.center)>"
+        return "<Shape \(self.title), center = \(self.center), uuid = \(self.uuid)>"
     }
 }
 
@@ -68,37 +70,63 @@ public final class UpdateTitleCommand: WrapperCommand {
     }
 }
 
-public final class CollissionDetectionCommand: WrapperCommand {
+public final class CollissionDetectionCommand: WrapperCommand, AsyncCommand {
 
-    public let command: Command
+    typealias MoveableID = UUID
+
+    private let moveables: [Moveable]
+    private var originalCenterPoints: [MoveableID: CGPoint] = [:]
+
+    public lazy var command: Command = self.makeCommand()
     public var timestamp: Date?
+    private(set) public var canceled: Bool = false
 
     public init(moveables: [Moveable]) {
-//        let centerPoints = moveables.map { $0.center }
-        self.command = BlockCommand(
+        self.moveables = moveables
+    }
+
+    public func cancel() {
+        self.canceled = true
+    }
+
+    private func makeCommand() -> Command {
+        return BlockCommand(
             command: {
+                self.originalCenterPoints = Dictionary(tuples: self.moveables.map { ($0.uuid, $0.center) })
                 // we assume a collission if any object has the same center as the first object
-//                guard moveables.filter({ $0.center == moveables[0].center }).count > 1 else { return }
-//
-//                // simulate asynchronous execution
-//                let deadlineTime = DispatchTime.now() + .seconds(1)
-//                DispatchQueue.main.asyncAfter(deadline: deadlineTime) {
-//                    for (index, moveable) in moveables.enumerated() {
-//                        moveable.move(by: CGVector(dx: index * 100, dy: 0))
-//                    }
-//                }
-        }, inverseCommand: {
-//            zip(moveables, centerPoints).forEach { moveable, center in
-//                moveable.center = center
-//            }
+                // guard self.moveables.filter({ $0.center == self.moveables[0].center }).count > 1 else { return }
+
+                // simulate asynchronous execution
+                let deadlineTime = DispatchTime.now() + .milliseconds(500)
+                DispatchQueue.global().asyncAfter(deadline: deadlineTime) {
+                    guard !self.canceled else { return }
+
+                    for (index, moveable) in self.moveables.enumerated() {
+                        moveable.move(by: CGVector(dx: index * 100, dy: 0))
+                    }
+                }
+        },
+            inverseCommand: {
+                guard !self.canceled else { return }
+                
+                self.moveables.forEach { moveable in
+                    guard let center = self.originalCenterPoints[moveable.uuid] else { return }
+
+                    moveable.center = center
+                }
         })
     }
 }
 
-public final class LayoutCommand: WrapperCommand {
+public final class LayoutCommand: WrapperCommand, AsyncCommand {
 
     public let command: Command
     public var timestamp: Date?
+    public var canceled: Bool {
+        guard let asyncCommand = self.command as? AsyncCommand else { return false }
+
+        return asyncCommand.canceled
+    }
 
     public init(moveables: [Moveable], target: CGPoint) {
         // Layout = Move objects + Collission Detection
@@ -108,5 +136,11 @@ public final class LayoutCommand: WrapperCommand {
         }
 
         self.command = GroupCommand(commands: moveCommands + [CollissionDetectionCommand(moveables: moveables)])
+    }
+
+    public func cancel() {
+        guard let asyncCommand = self.command as? AsyncCommand else { return }
+
+        asyncCommand.cancel()
     }
 }
