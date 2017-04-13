@@ -10,7 +10,9 @@ import Foundation
 
 
 /// The base interface for any executable command
-public protocol Command: CustomStringConvertible {
+public protocol Command: class, CustomStringConvertible {
+
+    var timestamp: Date? { get set }
 
     func invoke()
     func inversed() -> Command
@@ -19,17 +21,20 @@ public protocol Command: CustomStringConvertible {
 extension Command {
 
     public var description: String {
-        return "Command <\(type(of: self))>"
+        let executedDescription = self.timestamp != nil ? "executed at \(self.timestamp!)" : "not executed yet"
+        return "Command <\(type(of: self)) \(executedDescription)>"
     }
 }
 
 public protocol WrapperCommand: Command {
+
     var command: Command { get }
 }
 
 extension WrapperCommand {
 
     public func invoke() {
+        self.timestamp = Date()
         self.command.invoke()
     }
 

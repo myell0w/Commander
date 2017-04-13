@@ -39,9 +39,10 @@ public final class Shape: Moveable, Displayable, CustomStringConvertible {
 
 // MARK: - Commands
 
-public struct MoveCommand: WrapperCommand {
+public final class MoveCommand: WrapperCommand {
 
     public let command: Command
+    public var timestamp: Date?
 
     public init(moveable: Moveable, offset: CGVector) {
         let inverseOffset = CGVector(dx: -offset.dx, dy: -offset.dy)
@@ -49,15 +50,16 @@ public struct MoveCommand: WrapperCommand {
                                     inverseCommand: { moveable.move(by: inverseOffset) })
     }
 
-    public init(moveable: Moveable, target: CGPoint) {
+    public convenience init(moveable: Moveable, target: CGPoint) {
         let offset = CGVector(dx: target.x - moveable.center.x, dy: target.y - moveable.center.y)
         self.init(moveable: moveable, offset: offset)
     }
 }
 
-public struct UpdateTitleCommand: WrapperCommand {
+public final class UpdateTitleCommand: WrapperCommand {
 
     public let command: Command
+    public var timestamp: Date?
 
     public init(displayable: Displayable, title: String) {
         let currentTitle = displayable.title
@@ -66,9 +68,10 @@ public struct UpdateTitleCommand: WrapperCommand {
     }
 }
 
-public struct CollissionDetectionCommand: WrapperCommand {
+public final class CollissionDetectionCommand: WrapperCommand {
 
     public let command: Command
+    public var timestamp: Date?
 
     public init(moveables: [Moveable]) {
 //        let centerPoints = moveables.map { $0.center }
@@ -92,9 +95,10 @@ public struct CollissionDetectionCommand: WrapperCommand {
     }
 }
 
-public struct LayoutCommand: WrapperCommand {
+public final class LayoutCommand: WrapperCommand {
 
     public let command: Command
+    public var timestamp: Date?
 
     public init(moveables: [Moveable], target: CGPoint) {
         // Layout = Move objects + Collission Detection

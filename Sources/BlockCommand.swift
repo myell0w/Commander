@@ -10,23 +10,25 @@ import Foundation
 
 
 /// A command that can execute a block
-public struct BlockCommand: Command {
+public final class BlockCommand: Command {
 
     public typealias Block = (Void) -> Void
 
-    private let command: Block
-    private let inverseCommand: Block
+    private let executionBlock: Block
+    private let inverseExecutionBlock: Block
+    public var timestamp: Date?
 
     public init(command: @escaping Block, inverseCommand: @escaping Block) {
-        self.command = command
-        self.inverseCommand = inverseCommand
+        self.executionBlock = command
+        self.inverseExecutionBlock = inverseCommand
     }
 
     public func invoke() {
-        self.command()
+        self.timestamp = Date()
+        self.executionBlock()
     }
 
     public func inversed() -> Command {
-        return BlockCommand(command: self.inverseCommand, inverseCommand: self.command)
+        return BlockCommand(command: self.inverseExecutionBlock, inverseCommand: self.executionBlock)
     }
 }

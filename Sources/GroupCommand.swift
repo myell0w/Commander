@@ -10,9 +10,19 @@ import Foundation
 
 
 /// A command that groups other commands together
-public struct GroupCommand: Command {
+public final class GroupCommand: Command {
 
-    private let commands: [Command]
+    private var commands: [Command]
+
+    public var timestamp: Date? {
+        get {
+            return self.commands.first?.timestamp
+        }
+
+        set {
+            // do nothing
+        }
+    }
 
     public init(commands: [Command]) {
         self.commands = commands
