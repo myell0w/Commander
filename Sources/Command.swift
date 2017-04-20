@@ -11,50 +11,74 @@ import Foundation
 
 // MARK: - Command
 
+public enum State {
+    case ready
+    case executing
+    case finished(timestamp: Date)
+    case canceled
+}
+
+extension State: Hashable, Equatable {
+
+    public var hashValue: Int {
+        switch self {
+        case .ready:
+            return 0
+        case .executing:
+            return 1
+        case .finished(timestamp: _):
+            return 2
+        case .canceled:
+            return 3
+        }
+    }
+
+    public static func ==(lhs: State, rhs: State) -> Bool {
+        return lhs.hashValue == rhs.hashValue
+    }
+}
+
 /// The base interface for any executable command
 public protocol Command: class, CustomStringConvertible {
 
-    var timestamp: Date? { get set }
+    var timestamp: Date? { get }
+    var state: State { get set }
+    var isAsynchronous: Bool { get }
 
     func invoke()
     func inversed() -> Command
-}
-
-extension Command {
-
-    public var description: String {
-        let executedDescription = self.timestamp != nil ? "executed at \(self.timestamp!)" : "not executed yet"
-        return "Command <\(type(of: self)) \(executedDescription)>"
-    }
-}
-
-// MARK: - AsyncCommand
-
-/// The base interface for a command with an asynchronous execution
-
-public protocol AsyncCommand: Command {
-
-    var canceled: Bool { get }
 
     func cancel()
+    func finish()
 }
 
-// MARK: - WrapperCommand
+public extension Command {
 
-/// The base (convenience) interface for a command that internally wraps another command
-public protocol WrapperCommand: Command {
+    var timestamp: Date? {
+        if case let .finished(timestamp) = self.state {
+            return timestamp
+        }
 
-    var command: Command { get }
-}
-
-extension WrapperCommand {
-
-    public func invoke() {
-        self.timestamp = Date()
-        self.command.invoke()
+        return nil
     }
 
-    public func inversed() -> Command {
-        return self.command.inversed()
+    var isAsynchronous: Bool {
+        return false
+    }
+
+    var description: String {
+        return "Command <\(type(of: self)) - state:\(self.state), async:\(self.isAsynchronous)>"
+    }
+
+    func cancel() {
+        if case .finished(_) = self.state { return }
+
+        self.state = .canceled
+    }
+
+    func finish() {
+        guard case .executing = self.state else { return }
+
+        self.state = .finished(timestamp: Date())
     }
 }

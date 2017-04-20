@@ -16,19 +16,31 @@ public final class BlockCommand: Command {
 
     private let executionBlock: Block
     private let inverseExecutionBlock: Block
-    public var timestamp: Date?
+    public let isAsynchronous: Bool
+    public var state: State = .ready
 
-    public init(command: @escaping Block, inverseCommand: @escaping Block) {
+    // MARK: - Lifecycle
+
+    public init(command: @escaping Block, inverseCommand: @escaping Block, isAsynchronous: Bool = false) {
         self.executionBlock = command
         self.inverseExecutionBlock = inverseCommand
+        self.isAsynchronous = isAsynchronous
     }
 
+    // MARK: - Command
+
     public func invoke() {
-        self.timestamp = Date()
+        self.state = .executing
         self.executionBlock()
+        // finish() must be called explicitly for asynchronous tasks
+        if self.isAsynchronous == false {
+            self.finish()
+        }
     }
 
     public func inversed() -> Command {
-        return BlockCommand(command: self.inverseExecutionBlock, inverseCommand: self.executionBlock)
+        return BlockCommand(command: self.inverseExecutionBlock,
+                            inverseCommand: self.executionBlock,
+                            isAsynchronous: self.isAsynchronous)
     }
 }

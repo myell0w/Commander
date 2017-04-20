@@ -41,106 +41,104 @@ public final class Shape: Moveable, Displayable, CustomStringConvertible {
 
 // MARK: - Commands
 
-public final class MoveCommand: WrapperCommand {
+public final class MoveCommand: BaseCommand {
 
-    public let command: Command
-    public var timestamp: Date?
+    private let moveable: Moveable
+    private let offset: CGVector
 
     public init(moveable: Moveable, offset: CGVector) {
-        let inverseOffset = CGVector(dx: -offset.dx, dy: -offset.dy)
-        self.command = BlockCommand(command: { moveable.move(by: offset) },
-                                    inverseCommand: { moveable.move(by: inverseOffset) })
+        self.moveable = moveable
+        self.offset = offset
+        super.init()
     }
 
     public convenience init(moveable: Moveable, target: CGPoint) {
         let offset = CGVector(dx: target.x - moveable.center.x, dy: target.y - moveable.center.y)
         self.init(moveable: moveable, offset: offset)
     }
-}
 
-public final class UpdateTitleCommand: WrapperCommand {
+    override func makeCommand() -> Command? {
+        let inverseOffset = CGVector(dx: -self.offset.dx, dy: -self.offset.dy)
 
-    public let command: Command
-    public var timestamp: Date?
-
-    public init(displayable: Displayable, title: String) {
-        let currentTitle = displayable.title
-        self.command = BlockCommand(command: { displayable.title = title },
-                                    inverseCommand: { displayable.title = currentTitle })
+        return BlockCommand(command: { self.moveable.move(by: self.offset) },
+                            inverseCommand: { self.moveable.move(by: inverseOffset) })
     }
 }
 
-public final class CollissionDetectionCommand: WrapperCommand, AsyncCommand {
+public final class UpdateTitleCommand: BaseCommand {
 
-    typealias MoveableID = UUID
+    private let displayable: Displayable
+    private let title: String
+
+    public init(displayable: Displayable, title: String) {
+        self.displayable = displayable
+        self.title = title
+    }
+
+    override func makeCommand() -> Command? {
+        let currentTitle = self.displayable.title
+
+        return BlockCommand(command: { self.displayable.title = self.title },
+                            inverseCommand: { self.displayable.title = currentTitle })
+    }
+}
+
+public final class CollissionDetectionCommand: BaseCommand {
 
     private let moveables: [Moveable]
-    private var originalCenterPoints: [MoveableID: CGPoint] = [:]
-
-    public lazy var command: Command = self.makeCommand()
-    public var timestamp: Date?
-    private(set) public var canceled: Bool = false
+    public var isAsynchronous: Bool {
+        return true
+    }
 
     public init(moveables: [Moveable]) {
         self.moveables = moveables
     }
 
-    public func cancel() {
-        self.canceled = true
-    }
+    override func makeCommand() -> Command? {
+        let originalCenterPoints = Dictionary(tuples: self.moveables.map { ($0.uuid, $0.center) })
 
-    private func makeCommand() -> Command {
         return BlockCommand(
             command: {
-                self.originalCenterPoints = Dictionary(tuples: self.moveables.map { ($0.uuid, $0.center) })
-                // we assume a collission if any object has the same center as the first object
-                // guard self.moveables.filter({ $0.center == self.moveables[0].center }).count > 1 else { return }
-
                 // simulate asynchronous execution
                 let deadlineTime = DispatchTime.now() + .milliseconds(500)
                 DispatchQueue.global().asyncAfter(deadline: deadlineTime) {
-                    guard !self.canceled else { return }
-
-                    for (index, moveable) in self.moveables.enumerated() {
-                        moveable.move(by: CGVector(dx: index * 100, dy: 0))
+                    let moveCommands = zip(self.moveables.indices, self.moveables).map { index, moveable in
+                        return MoveCommand(moveable: moveable, offset: CGVector(dx: index * 100, dy: 0))
                     }
+
+                    let groupCommand = GroupCommand(commands: moveCommands)
+                    groupCommand.invoke()
+                    self.finish()
                 }
         },
             inverseCommand: {
-                guard !self.canceled else { return }
-                
-                self.moveables.forEach { moveable in
-                    guard let center = self.originalCenterPoints[moveable.uuid] else { return }
-
-                    moveable.center = center
+                let moveCommands = self.moveables.map {
+                    return MoveCommand(moveable: $0, target: originalCenterPoints[$0.uuid]!)
                 }
+
+                let groupCommand = GroupCommand(commands: moveCommands)
+                groupCommand.invoke()
         })
     }
 }
 
-public final class LayoutCommand: WrapperCommand, AsyncCommand {
+public final class LayoutCommand: BaseCommand {
 
-    public let command: Command
-    public var timestamp: Date?
-    public var canceled: Bool {
-        guard let asyncCommand = self.command as? AsyncCommand else { return false }
-
-        return asyncCommand.canceled
-    }
+    private let moveables: [Moveable]
+    private let target: CGPoint
 
     public init(moveables: [Moveable], target: CGPoint) {
-        // Layout = Move objects + Collission Detection
-        let moveCommands = zip(moveables.indices, moveables).map { index, moveable -> MoveCommand in
-            let y = target.y + CGFloat(index) * 10.0
-            return MoveCommand(moveable: moveable, target: CGPoint(x: target.x, y: y))
-        }
-
-        self.command = GroupCommand(commands: moveCommands + [CollissionDetectionCommand(moveables: moveables)])
+        self.moveables = moveables
+        self.target = target
     }
 
-    public func cancel() {
-        guard let asyncCommand = self.command as? AsyncCommand else { return }
+    override func makeCommand() -> Command? {
+        // Layout = Move objects + Collission Detection
+        let moveCommands = zip(self.moveables.indices, self.moveables).map { index, moveable -> MoveCommand in
+            let y = self.target.y + CGFloat(index) * 10.0
+            return MoveCommand(moveable: moveable, target: CGPoint(x: self.target.x, y: y))
+        }
 
-        asyncCommand.cancel()
+        return GroupCommand(commands: moveCommands + [CollissionDetectionCommand(moveables: moveables)])
     }
 }

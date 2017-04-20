@@ -10,13 +10,25 @@ import Foundation
 
 
 /// A command that groups other commands together
-public final class GroupCommand: Command, AsyncCommand {
+public final class GroupCommand: Command {
 
     private var commands: [Command]
-
-    public var timestamp: Date? {
+    public var state: State {
         get {
-            return self.commands.first?.timestamp
+            let states = self.commands.map { $0.state }
+            let stateSet = Set(states)
+
+            // no commands?
+            guard stateSet.isEmpty == false else { return .ready }
+            // all have same state
+            guard stateSet.count > 1 else { return states[0] }
+
+            // TODO: How to handle this correctly
+            if stateSet.contains(.executing) {
+                return .executing
+            }
+
+            return .ready
         }
 
         set {
@@ -24,13 +36,13 @@ public final class GroupCommand: Command, AsyncCommand {
         }
     }
 
-    public var canceled: Bool {
-        return self.commands.flatMap { $0 as? AsyncCommand }.filter { $0.canceled }.isEmpty == false
-    }
+    // MARK: - Lifecycle
 
     public init(commands: [Command]) {
         self.commands = commands
     }
+
+    // MARK: - Command
 
     public func invoke() {
         self.commands.forEach { $0.invoke() }
@@ -42,6 +54,6 @@ public final class GroupCommand: Command, AsyncCommand {
     }
 
     public func cancel() {
-        self.commands.flatMap { $0 as? AsyncCommand }.forEach { $0.cancel() }
+        self.commands.forEach { $0.cancel() }
     }
 }

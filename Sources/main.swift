@@ -103,27 +103,32 @@ private func testLayout() {
     let layoutCommand = LayoutCommand(moveables: shapes, target: .zero)
     commander.invoke(command: layoutCommand)
 
-//    Thread.sleep(forTimeInterval: 1.0)
-//
-//    for (index, shape) in zip(shapes.indices, shapes) {
-//        expect(shape.center.x == CGFloat(index * 100))
-//        expect(shape.center.y == CGFloat(index * 10))
-//    }
+    Thread.sleep(forTimeInterval: 1.0)
+
+    for (index, shape) in zip(shapes.indices, shapes) {
+        expect(shape.center.x == CGFloat(index * 100), description: "Verifying x for shape \(shape)")
+        expect(shape.center.y == CGFloat(index * 10), description: "Verifying y for shape \(shape)")
+    }
 
     try! commander.undo()
 
     Thread.sleep(forTimeInterval: 1.0)
 
     for shape in shapes {
-        expect(shape.center == .zero)
+        expect(shape.center == .zero, description: "Verifying center after undo")
     }
 }
 
 @discardableResult
 private func expect(_ expectation: @autoclosure (Void) -> Bool, description: String = "") -> String {
-    var output = expectation() ? "✅" : "❌"
+    let succeeded = expectation()
+    var output = succeeded ? "✅" : "❌"
     if !description.isEmpty {
         output += " - \(description)"
+    }
+
+    if succeeded == false {
+
     }
 
     print(output)
