@@ -17,6 +17,14 @@ public class BaseCommand: Command {
 
     // MARK: - Command
 
+    public var isAsynchronous: Bool {
+        return false
+    }
+
+    public var isMutating: Bool {
+        return true
+    }
+
     public func invoke() {
         self.state = .executing
         self.command.invoke()

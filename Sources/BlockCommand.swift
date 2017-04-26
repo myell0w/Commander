@@ -17,14 +17,16 @@ public final class BlockCommand: Command {
     private let executionBlock: Block
     private let inverseExecutionBlock: Block
     public let isAsynchronous: Bool
+    public let isMutating: Bool
     public var state: State = .ready
 
     // MARK: - Lifecycle
 
-    public init(command: @escaping Block, inverseCommand: @escaping Block, isAsynchronous: Bool = false) {
+    public init(command: @escaping Block, inverseCommand: @escaping Block, isAsynchronous: Bool = false, isMutating: Bool = true) {
         self.executionBlock = command
         self.inverseExecutionBlock = inverseCommand
         self.isAsynchronous = isAsynchronous
+        self.isMutating = isMutating
     }
 
     // MARK: - Command

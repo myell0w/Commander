@@ -47,6 +47,7 @@ public protocol Command: class, CustomStringConvertible {
     var timestamp: Date? { get }
     var state: State { get set }
     var isAsynchronous: Bool { get }
+    var isMutating: Bool { get }
 
     func invoke()
     func inversed() -> Command
@@ -63,10 +64,6 @@ public extension Command {
         }
 
         return nil
-    }
-
-    var isAsynchronous: Bool {
-        return false
     }
 
     var description: String {

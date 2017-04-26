@@ -124,12 +124,19 @@ private func testValidation() {
     let commander = CommandDispatcher(validator: AppValidator(appMode: AppMode(mode: .readOnly)))
 
     let shape = Shape()
+    shape.title = "Original Title"
     let updateCommand = UpdateTitleCommand(displayable: shape, title: "New Title")
 
-    expect(shape.title == "", description: "Verifiying initial title of shape")
+    expect(shape.title == "Original Title", description: "Verifiying initial title of shape")
     commander.invoke(command: updateCommand)
-    expect(shape.title == "", description: "Verifiying title of shape after forbidden command")
+    expect(shape.title == "Original Title", description: "Verifiying title of shape after forbidden command")
     expect(updateCommand.state == .forbidden, description: "Verifiying state of forbidden command")
+
+    var output: TextOutputStream = ""
+    let displayCommand = DisplayCommand(displayable: shape, outputStream: &output)
+    commander.invoke(command: displayCommand)
+    expect(displayCommand.state == .finished(timestamp: Date()), description: "Verifiying state of display command")
+    expect((output as! String) == "Priting displayable with title: Original Title", description: "Verifiying output of display command")
 }
 
 @discardableResult
@@ -138,10 +145,6 @@ private func expect(_ expectation: @autoclosure (Void) -> Bool, description: Str
     var output = succeeded ? "✅" : "❌"
     if !description.isEmpty {
         output += " - \(description)"
-    }
-
-    if succeeded == false {
-
     }
 
     print(output)

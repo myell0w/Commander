@@ -86,7 +86,7 @@ public final class UpdateTitleCommand: BaseCommand {
 public final class CollissionDetectionCommand: BaseCommand {
 
     private let moveables: [Moveable]
-    public var isAsynchronous: Bool {
+    override public var isAsynchronous: Bool {
         return true
     }
 
@@ -143,6 +143,26 @@ public final class LayoutCommand: BaseCommand {
     }
 }
 
+public final class DisplayCommand: BaseCommand {
+
+    private let displayable: Displayable
+    private var outputStream: TextOutputStream
+    override public var isMutating: Bool {
+        return false
+    }
+
+    public init(displayable: Displayable, outputStream: inout TextOutputStream) {
+        self.displayable = displayable
+        self.outputStream = outputStream
+    }
+
+    override func makeCommand() -> Command? {
+        return BlockCommand(command: {
+            self.outputStream.write("Priting displayable with title: \(self.displayable.title)")
+        }, inverseCommand: { } )
+    }
+}
+
 // MARK: - Validation
 
 protocol AppDecision {
@@ -187,6 +207,10 @@ final class AppValidator: CommandValidator {
     // MARK: - CommandValidator
 
     func validate(command: Command) -> Bool {
+        if !command.isMutating {
+            return true
+        }
+        
         return self.appMode.canEdit()
     }
 }

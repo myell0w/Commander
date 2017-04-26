@@ -36,6 +36,14 @@ public final class GroupCommand: Command {
         }
     }
 
+    public var isAsynchronous: Bool {
+        return self.commands.lazy.filter({ $0.isAsynchronous }).isEmpty == false
+    }
+
+    public var isMutating: Bool {
+        return self.commands.lazy.filter({ $0.isMutating }).isEmpty == false
+    }
+
     // MARK: - Lifecycle
 
     public init(commands: [Command]) {
