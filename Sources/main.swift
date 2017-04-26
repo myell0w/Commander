@@ -9,14 +9,15 @@ import Foundation
 
 
 func main() {
-    //testBasics()
+    testBasics()
     testLayout()
+    testValidation()
 }
 
 private func testBasics() {
-    let shape = Shape()
-    let commander = CommandDispatcher()
+    let commander = CommandDispatcher(validator: AppValidator(appMode: AppMode(mode: .full)))
 
+    let shape = Shape()
     let move = MoveCommand(moveable: shape, offset: CGVector(dx: 10.0, dy: 5.0))
 
     // test preconditions
@@ -92,9 +93,9 @@ private func testBasics() {
 }
 
 private func testLayout() {
-    let shapes = [Shape(), Shape(), Shape(), Shape(), Shape(), Shape(), Shape(), Shape(), Shape(), Shape()]
-    let commander = CommandDispatcher()
+    let commander = CommandDispatcher(validator: AppValidator(appMode: AppMode(mode: .full)))
 
+    let shapes = [Shape(), Shape(), Shape(), Shape(), Shape(), Shape(), Shape(), Shape(), Shape(), Shape()]
     for (index, shape) in zip(shapes.indices, shapes) {
         shape.title = "#\(index)"
         expect(shape.center == .zero, description: "Verifying Inital state for layout")
@@ -117,6 +118,18 @@ private func testLayout() {
     for shape in shapes {
         expect(shape.center == .zero, description: "Verifying center after undo")
     }
+}
+
+private func testValidation() {
+    let commander = CommandDispatcher(validator: AppValidator(appMode: AppMode(mode: .readOnly)))
+
+    let shape = Shape()
+    let updateCommand = UpdateTitleCommand(displayable: shape, title: "New Title")
+
+    expect(shape.title == "", description: "Verifiying initial title of shape")
+    commander.invoke(command: updateCommand)
+    expect(shape.title == "", description: "Verifiying title of shape after forbidden command")
+    expect(updateCommand.state == .forbidden, description: "Verifiying state of forbidden command")
 }
 
 @discardableResult

@@ -16,12 +16,24 @@ public final class CommandDispatcher {
         case redo
     }
 
+    fileprivate let validator: CommandValidator
     fileprivate(set) var commands: [Command] = []
     fileprivate(set) var undoneCommands: [Command] = []
+
+    // MARK: - Lifecycle
+
+    init(validator: CommandValidator) {
+        self.validator = validator
+    }
 
     // MARK: - CommandDispatcher
 
     public func invoke(command: Command) {
+        guard self.validator.validate(command: command) else {
+            command.state = .forbidden
+            return
+        }
+
         command.invoke()
         self.commands.append(command)
         self.undoneCommands.removeAll()

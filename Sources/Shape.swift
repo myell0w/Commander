@@ -142,3 +142,51 @@ public final class LayoutCommand: BaseCommand {
         return GroupCommand(commands: moveCommands + [CollissionDetectionCommand(moveables: moveables)])
     }
 }
+
+// MARK: - Validation
+
+protocol AppDecision {
+
+    func canEdit() -> Bool
+}
+
+final class AppMode: AppDecision {
+
+    enum Mode {
+        case readOnly
+        case full
+    }
+
+    private let mode: Mode
+
+    init(mode: Mode) {
+        self.mode = mode
+    }
+
+    func canEdit() -> Bool {
+        switch self.mode {
+        case .readOnly:
+            return false
+        case .full:
+            return true
+        }
+    }
+
+}
+
+final class AppValidator: CommandValidator {
+
+    let appMode: AppDecision
+
+    // MARK: - Lifecycle
+
+    init(appMode: AppDecision) {
+        self.appMode = appMode
+    }
+
+    // MARK: - CommandValidator
+
+    func validate(command: Command) -> Bool {
+        return self.appMode.canEdit()
+    }
+}

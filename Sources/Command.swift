@@ -16,6 +16,7 @@ public enum State {
     case executing
     case finished(timestamp: Date)
     case canceled
+    case forbidden
 }
 
 extension State: Hashable, Equatable {
@@ -30,6 +31,8 @@ extension State: Hashable, Equatable {
             return 2
         case .canceled:
             return 3
+        case .forbidden:
+            return 4
         }
     }
 

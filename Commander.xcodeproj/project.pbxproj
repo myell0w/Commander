@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		9B23C2651E9F79AB009A50E9 /* Dictionary+Tuples.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B23C2641E9F79AB009A50E9 /* Dictionary+Tuples.swift */; };
 		9B23C26D1EA8A358009A50E9 /* BaseCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B23C26C1EA8A358009A50E9 /* BaseCommand.swift */; };
+		9BA96E0F1EAA4F8A0062FC41 /* CommandValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA96E0E1EAA4F8A0062FC41 /* CommandValidator.swift */; };
 		9BF9E2581E90DE43008A70C8 /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF9E2571E90DE43008A70C8 /* Command.swift */; };
 		9BF9E25A1E90DE7B008A70C8 /* BlockCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF9E2591E90DE7B008A70C8 /* BlockCommand.swift */; };
 		9BF9E25C1E90DEA6008A70C8 /* GroupCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF9E25B1E90DEA6008A70C8 /* GroupCommand.swift */; };
@@ -34,6 +35,7 @@
 /* Begin PBXFileReference section */
 		9B23C2641E9F79AB009A50E9 /* Dictionary+Tuples.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+Tuples.swift"; sourceTree = "<group>"; };
 		9B23C26C1EA8A358009A50E9 /* BaseCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseCommand.swift; sourceTree = "<group>"; };
+		9BA96E0E1EAA4F8A0062FC41 /* CommandValidator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommandValidator.swift; sourceTree = "<group>"; };
 		9BF9E2571E90DE43008A70C8 /* Command.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Command.swift; sourceTree = "<group>"; };
 		9BF9E2591E90DE7B008A70C8 /* BlockCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockCommand.swift; sourceTree = "<group>"; };
 		9BF9E25B1E90DEA6008A70C8 /* GroupCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupCommand.swift; sourceTree = "<group>"; };
@@ -75,6 +77,7 @@
 				9BF9E2591E90DE7B008A70C8 /* BlockCommand.swift */,
 				9BF9E25B1E90DEA6008A70C8 /* GroupCommand.swift */,
 				9BF9E25D1E90DECB008A70C8 /* CommandDispatcher.swift */,
+				9BA96E0E1EAA4F8A0062FC41 /* CommandValidator.swift */,
 			);
 			name = Commands;
 			sourceTree = "<group>";
@@ -223,6 +226,7 @@
 			files = (
 				9B23C26D1EA8A358009A50E9 /* BaseCommand.swift in Sources */,
 				9B23C2651E9F79AB009A50E9 /* Dictionary+Tuples.swift in Sources */,
+				9BA96E0F1EAA4F8A0062FC41 /* CommandValidator.swift in Sources */,
 				OBJ_30 /* main.swift in Sources */,
 				9BF9E2681E90E547008A70C8 /* CommanderTests.swift in Sources */,
 				9BF9E2601E90E07F008A70C8 /* Shape.swift in Sources */,
