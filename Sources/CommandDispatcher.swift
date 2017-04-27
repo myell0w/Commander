@@ -28,8 +28,12 @@ public final class CommandDispatcher {
 
     // MARK: - CommandDispatcher
 
-    public func invoke(command: Command) {
-        guard self.validator.validate(command: command) else {
+    public func canInvoke(_ command: Command) -> Bool {
+        return self.validator.validate(command: command)
+    }
+
+    public func invoke(_ command: Command) {
+        guard self.canInvoke(command) else {
             command.state = .forbidden
             return
         }

@@ -146,19 +146,19 @@ public final class LayoutCommand: BaseCommand {
 public final class DisplayCommand: BaseCommand {
 
     private let displayable: Displayable
-    private var outputStream: TextOutputStream
+    private let outputStreamPointer: UnsafeMutablePointer<TextOutputStream>
     override public var isMutating: Bool {
         return false
     }
 
-    public init(displayable: Displayable, outputStream: inout TextOutputStream) {
+    public init(displayable: Displayable, outputStream: UnsafeMutablePointer<TextOutputStream>) {
         self.displayable = displayable
-        self.outputStream = outputStream
+        self.outputStreamPointer = outputStream
     }
 
     override func makeCommand() -> Command? {
         return BlockCommand(command: {
-            self.outputStream.write("Priting displayable with title: \(self.displayable.title)")
+            self.outputStreamPointer.pointee.write("Priting displayable with title: \(self.displayable.title)")
         }, inverseCommand: { } )
     }
 }

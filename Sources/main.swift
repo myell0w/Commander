@@ -25,12 +25,12 @@ private func testBasics() {
     expect(shape.title == "")
 
     // test move
-    commander.invoke(command: move)
+    commander.invoke(move)
     expect(shape.center == CGPoint(x: 10.0, y: 5.0))
     expect(commander.commands.count == 1)
     expect(commander.undoneCommands.count == 0)
 
-    commander.invoke(command: move)
+    commander.invoke(move)
     expect(shape.center == CGPoint(x: 20.0, y: 10.0))
     expect(commander.commands.count == 2)
     expect(commander.undoneCommands.count == 0)
@@ -49,13 +49,13 @@ private func testBasics() {
 
     // test grouping
     let groupedIdentityMove = GroupCommand(commands: [move, move.inversed()])
-    commander.invoke(command: groupedIdentityMove)
+    commander.invoke(groupedIdentityMove)
     expect(shape.center == CGPoint(x: 20.0, y: 10.0))
     expect(commander.commands.count == 3)
     expect(commander.undoneCommands.count == 0)
 
     let groupedDoubleMove = GroupCommand(commands: [move, move])
-    commander.invoke(command: groupedDoubleMove.inversed())
+    commander.invoke(groupedDoubleMove.inversed())
     expect(shape.center == .zero)
     expect(commander.commands.count == 4)
     expect(commander.undoneCommands.count == 0)
@@ -79,14 +79,14 @@ private func testBasics() {
 
     // test title setting
     let updateTitle = UpdateTitleCommand(displayable: shape, title: "A Shape")
-    commander.invoke(command: updateTitle)
+    commander.invoke(updateTitle)
     expect(shape.center == .zero)
     expect(shape.title == "A Shape")
     expect(commander.commands.count == 1)
     expect(commander.undoneCommands.count == 0)
 
     let updateTitle2 = UpdateTitleCommand(displayable: shape, title: "A New Shape")
-    commander.invoke(command: updateTitle2)
+    commander.invoke(updateTitle2)
     expect(shape.title == "A New Shape")
     try! commander.undo()
     expect(shape.title == "A Shape")
@@ -102,7 +102,7 @@ private func testLayout() {
     }
 
     let layoutCommand = LayoutCommand(moveables: shapes, target: .zero)
-    commander.invoke(command: layoutCommand)
+    commander.invoke(layoutCommand)
 
     Thread.sleep(forTimeInterval: 1.0)
 
@@ -128,13 +128,13 @@ private func testValidation() {
     let updateCommand = UpdateTitleCommand(displayable: shape, title: "New Title")
 
     expect(shape.title == "Original Title", description: "Verifiying initial title of shape")
-    commander.invoke(command: updateCommand)
+    commander.invoke(updateCommand)
     expect(shape.title == "Original Title", description: "Verifiying title of shape after forbidden command")
     expect(updateCommand.state == .forbidden, description: "Verifiying state of forbidden command")
 
     var output: TextOutputStream = ""
     let displayCommand = DisplayCommand(displayable: shape, outputStream: &output)
-    commander.invoke(command: displayCommand)
+    commander.invoke(displayCommand)
     expect(displayCommand.state == .finished(timestamp: Date()), description: "Verifiying state of display command")
     expect((output as! String) == "Priting displayable with title: Original Title", description: "Verifiying output of display command")
 }
