@@ -60,8 +60,8 @@ public final class MoveCommand: BaseCommand {
     override func makeCommand() -> Command? {
         let inverseOffset = CGVector(dx: -self.offset.dx, dy: -self.offset.dy)
 
-        return BlockCommand(command: { self.moveable.move(by: self.offset) },
-                            inverseCommand: { self.moveable.move(by: inverseOffset) })
+        return BlockCommand(block: { self.moveable.move(by: self.offset) },
+                            inverseBlock: { self.moveable.move(by: inverseOffset) })
     }
 }
 
@@ -78,8 +78,8 @@ public final class UpdateTitleCommand: BaseCommand {
     override func makeCommand() -> Command? {
         let currentTitle = self.displayable.title
 
-        return BlockCommand(command: { self.displayable.title = self.title },
-                            inverseCommand: { self.displayable.title = currentTitle })
+        return BlockCommand(block: { self.displayable.title = self.title },
+                            inverseBlock: { self.displayable.title = currentTitle })
     }
 }
 
@@ -98,7 +98,7 @@ public final class CollissionDetectionCommand: BaseCommand {
         let originalCenterPoints = Dictionary(tuples: self.moveables.map { ($0.uuid, $0.center) })
 
         return BlockCommand(
-            command: {
+            block: {
                 // simulate asynchronous execution
                 let deadlineTime = DispatchTime.now() + .milliseconds(500)
                 DispatchQueue.global().asyncAfter(deadline: deadlineTime) {
@@ -111,7 +111,7 @@ public final class CollissionDetectionCommand: BaseCommand {
                     self.finish()
                 }
         },
-            inverseCommand: {
+            inverseBlock: {
                 let moveCommands = self.moveables.map {
                     return MoveCommand(moveable: $0, target: originalCenterPoints[$0.uuid]!)
                 }
@@ -157,9 +157,8 @@ public final class DisplayCommand: BaseCommand {
     }
 
     override func makeCommand() -> Command? {
-        return BlockCommand(command: {
-            self.outputStreamPointer.pointee.write("Priting displayable with title: \(self.displayable.title)")
-        }, inverseCommand: { } )
+        return BlockCommand(block: { self.outputStreamPointer.pointee.write("Priting displayable with title: \(self.displayable.title)") },
+                            inverseBlock: { } )
     }
 }
 

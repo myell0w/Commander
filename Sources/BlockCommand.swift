@@ -22,9 +22,9 @@ public final class BlockCommand: Command {
 
     // MARK: - Lifecycle
 
-    public init(command: @escaping Block, inverseCommand: @escaping Block, isAsynchronous: Bool = false, isMutating: Bool = true) {
-        self.executionBlock = command
-        self.inverseExecutionBlock = inverseCommand
+    public init(block: @escaping Block, inverseBlock: @escaping Block, isAsynchronous: Bool = false, isMutating: Bool = true) {
+        self.executionBlock = block
+        self.inverseExecutionBlock = inverseBlock
         self.isAsynchronous = isAsynchronous
         self.isMutating = isMutating
     }
@@ -41,8 +41,9 @@ public final class BlockCommand: Command {
     }
 
     public func inversed() -> Command {
-        return BlockCommand(command: self.inverseExecutionBlock,
-                            inverseCommand: self.executionBlock,
-                            isAsynchronous: self.isAsynchronous)
+        return BlockCommand(block: self.inverseExecutionBlock,
+                            inverseBlock: self.executionBlock,
+                            isAsynchronous: self.isAsynchronous,
+                            isMutating: self.isMutating)
     }
 }

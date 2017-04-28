@@ -9,6 +9,13 @@
 import Foundation
 
 
+public protocol CommandDispatcherDelegate: class {
+
+    func commandDispatcher(_ commandDispatcher: CommandDispatcher, didForbidCommand command: Command)
+}
+
+
+/// Controller class to invoke/dispatch commands
 public final class CommandDispatcher {
 
     public enum Error: Swift.Error {
@@ -19,6 +26,10 @@ public final class CommandDispatcher {
     fileprivate let validator: CommandValidator
     fileprivate(set) var commands: [Command] = []
     fileprivate(set) var undoneCommands: [Command] = []
+
+    // MARK: - Properties
+
+    weak var delegate: CommandDispatcherDelegate?
 
     // MARK: - Lifecycle
 
@@ -35,6 +46,7 @@ public final class CommandDispatcher {
     public func invoke(_ command: Command) {
         guard self.canInvoke(command) else {
             command.state = .forbidden
+            self.delegate?.commandDispatcher(self, didForbidCommand: command)
             return
         }
 

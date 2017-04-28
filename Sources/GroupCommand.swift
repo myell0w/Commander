@@ -26,6 +26,8 @@ public final class GroupCommand: Command {
             // TODO: How to handle this correctly
             if stateSet.contains(.executing) {
                 return .executing
+            } else if stateSet.contains(.forbidden) {
+                return .forbidden
             }
 
             return .ready

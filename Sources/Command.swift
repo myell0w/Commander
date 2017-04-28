@@ -72,6 +72,7 @@ public extension Command {
 
     func cancel() {
         if case .finished(_) = self.state { return }
+        if case .forbidden = self.state { return }
 
         self.state = .canceled
     }
