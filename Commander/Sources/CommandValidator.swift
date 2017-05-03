@@ -9,7 +9,7 @@
 import Foundation
 
 
-/// Validates whether a command is allowed to be performed
+/// Validates whether a command is allowed to be invoked
 public protocol CommandValidator {
 
     func validate(command: Command) -> Bool

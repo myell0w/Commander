@@ -9,7 +9,7 @@
 import Foundation
 
 
-public final class CommandUndoHandler {
+public final class CommandUndoManager {
 
     public enum Error: Swift.Error {
         case undo
@@ -18,6 +18,8 @@ public final class CommandUndoHandler {
 
     fileprivate(set) var commands: [Command] = []
     fileprivate(set) var undoneCommands: [Command] = []
+
+    // MARK: - CommandUndoManager
 
     public func undo(numberOfCommands: Int = 1) throws {
         guard self.commands.count >= numberOfCommands else { throw Error.undo }
@@ -41,9 +43,9 @@ public final class CommandUndoHandler {
     }
 }
 
-// MARK: CommandHandler
+// MARK: - CommandHandler
 
-extension CommandUndoHandler: CommandHandler {
+extension CommandUndoManager: CommandHandler {
 
     public func handleCommand(_ command: Command) {
         self.commands.append(command)

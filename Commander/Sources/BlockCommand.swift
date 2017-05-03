@@ -10,12 +10,14 @@ import Foundation
 
 
 /// A command that can execute a block
-public final class BlockCommand: Command {
+public final class BlockCommand {
 
     public typealias Block = (Void) -> Void
 
-    private let executionBlock: Block
-    private let inverseExecutionBlock: Block
+    fileprivate let executionBlock: Block
+    fileprivate let inverseExecutionBlock: Block
+
+    // (from Command) - Swift doesn't allow to move Properties to extensions (yet)
     public let isAsynchronous: Bool
     public let isMutating: Bool
     public var state: State = .ready
@@ -28,8 +30,11 @@ public final class BlockCommand: Command {
         self.isAsynchronous = isAsynchronous
         self.isMutating = isMutating
     }
+}
 
-    // MARK: - Command
+// MARK: - Command
+
+extension BlockCommand: Command {
 
     public func invoke() {
         self.state = .executing

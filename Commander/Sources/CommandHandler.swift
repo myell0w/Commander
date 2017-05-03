@@ -9,6 +9,7 @@
 import Foundation
 
 
+/// a CommandHandler is any object, that can trigger actions based on a specific command
 public protocol CommandHandler {
 
     func handleCommand(_ command: Command)

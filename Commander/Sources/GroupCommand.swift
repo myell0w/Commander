@@ -9,10 +9,22 @@
 import Foundation
 
 
-/// A command that groups other commands together
-public final class GroupCommand: Command {
+/// A command that groups other commands
+public final class GroupCommand {
 
-    private var commands: [Command]
+    fileprivate let commands: [Command]
+
+    // MARK: - Lifecycle
+
+    public init(commands: [Command]) {
+        self.commands = commands
+    }
+}
+
+// MARK: - Command
+
+extension GroupCommand: Command {
+
     public var state: State {
         get {
             let states = self.commands.map { $0.state }
@@ -23,7 +35,7 @@ public final class GroupCommand: Command {
             // all have same state
             guard stateSet.count > 1 else { return states[0] }
 
-            // TODO: How to handle this correctly
+            // TODO: How to handle this correctly?
             if stateSet.contains(.executing) {
                 return .executing
             } else if stateSet.contains(.forbidden) {
@@ -45,14 +57,6 @@ public final class GroupCommand: Command {
     public var isMutating: Bool {
         return self.commands.lazy.filter({ $0.isMutating }).isEmpty == false
     }
-
-    // MARK: - Lifecycle
-
-    public init(commands: [Command]) {
-        self.commands = commands
-    }
-
-    // MARK: - Command
 
     public func invoke() {
         self.commands.forEach { $0.invoke() }

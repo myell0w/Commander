@@ -13,7 +13,7 @@ import XCTest
 class CommanderTests: XCTestCase {
     
     func testBasics() {
-        let undoManager = CommandUndoHandler()
+        let undoManager = CommandUndoManager()
         let commander = CommandDispatcher(validator: AppValidator(appMode: AppMode(mode: .full)))
         commander.handlers.append(undoManager)
 
@@ -93,7 +93,7 @@ class CommanderTests: XCTestCase {
     }
 
     func testLayout() {
-        let undoManager = CommandUndoHandler()
+        let undoManager = CommandUndoManager()
         let commander = CommandDispatcher(validator: AppValidator(appMode: AppMode(mode: .full)))
         commander.handlers.append(undoManager)
 

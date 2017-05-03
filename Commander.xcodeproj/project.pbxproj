@@ -18,7 +18,7 @@
 		9B7990891EBA2595008B9D26 /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B79907E1EBA2595008B9D26 /* Command.swift */; };
 		9B79908A1EBA2595008B9D26 /* CommandDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B79907F1EBA2595008B9D26 /* CommandDispatcher.swift */; };
 		9B79908B1EBA2595008B9D26 /* CommandHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B7990801EBA2595008B9D26 /* CommandHandler.swift */; };
-		9B79908C1EBA2595008B9D26 /* CommandUndoHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B7990811EBA2595008B9D26 /* CommandUndoHandler.swift */; };
+		9B79908C1EBA2595008B9D26 /* CommandUndoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B7990811EBA2595008B9D26 /* CommandUndoManager.swift */; };
 		9B79908D1EBA2595008B9D26 /* CommandValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B7990821EBA2595008B9D26 /* CommandValidator.swift */; };
 		9B79908F1EBA2595008B9D26 /* GroupCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B7990841EBA2595008B9D26 /* GroupCommand.swift */; };
 		9B7990911EBA2595008B9D26 /* Shape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B7990861EBA2595008B9D26 /* Shape.swift */; };
@@ -51,7 +51,7 @@
 		9B79907E1EBA2595008B9D26 /* Command.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Command.swift; sourceTree = "<group>"; };
 		9B79907F1EBA2595008B9D26 /* CommandDispatcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommandDispatcher.swift; sourceTree = "<group>"; };
 		9B7990801EBA2595008B9D26 /* CommandHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommandHandler.swift; sourceTree = "<group>"; };
-		9B7990811EBA2595008B9D26 /* CommandUndoHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommandUndoHandler.swift; sourceTree = "<group>"; };
+		9B7990811EBA2595008B9D26 /* CommandUndoManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommandUndoManager.swift; sourceTree = "<group>"; };
 		9B7990821EBA2595008B9D26 /* CommandValidator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommandValidator.swift; sourceTree = "<group>"; };
 		9B7990841EBA2595008B9D26 /* GroupCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupCommand.swift; sourceTree = "<group>"; };
 		9B7990861EBA2595008B9D26 /* Shape.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Shape.swift; path = Sources/Shape.swift; sourceTree = "<group>"; };
@@ -127,7 +127,7 @@
 				9B79907E1EBA2595008B9D26 /* Command.swift */,
 				9B79907F1EBA2595008B9D26 /* CommandDispatcher.swift */,
 				9B7990801EBA2595008B9D26 /* CommandHandler.swift */,
-				9B7990811EBA2595008B9D26 /* CommandUndoHandler.swift */,
+				9B7990811EBA2595008B9D26 /* CommandUndoManager.swift */,
 				9B7990821EBA2595008B9D26 /* CommandValidator.swift */,
 				9B7990841EBA2595008B9D26 /* GroupCommand.swift */,
 			);
@@ -249,7 +249,7 @@
 				9B79905C1EBA2555008B9D26 /* AppDelegate.swift in Sources */,
 				9B7990931EBA2682008B9D26 /* Dictionary+Tuples.swift in Sources */,
 				9B7990891EBA2595008B9D26 /* Command.swift in Sources */,
-				9B79908C1EBA2595008B9D26 /* CommandUndoHandler.swift in Sources */,
+				9B79908C1EBA2595008B9D26 /* CommandUndoManager.swift in Sources */,
 				9B7990881EBA2595008B9D26 /* BlockCommand.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
