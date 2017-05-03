@@ -57,7 +57,7 @@ public final class MoveCommand: BaseCommand {
         self.init(moveable: moveable, offset: offset)
     }
 
-    override func makeCommand() -> Command? {
+    override func makeCommand() -> Command {
         let inverseOffset = CGVector(dx: -self.offset.dx, dy: -self.offset.dy)
 
         return BlockCommand(block: { self.moveable.move(by: self.offset) },
@@ -75,7 +75,7 @@ public final class UpdateTitleCommand: BaseCommand {
         self.title = title
     }
 
-    override func makeCommand() -> Command? {
+    override func makeCommand() -> Command {
         let currentTitle = self.displayable.title
 
         return BlockCommand(block: { self.displayable.title = self.title },
@@ -94,7 +94,7 @@ public final class CollissionDetectionCommand: BaseCommand {
         self.moveables = moveables
     }
 
-    override func makeCommand() -> Command? {
+    override func makeCommand() -> Command {
         let originalCenterPoints = Dictionary(tuples: self.moveables.map { ($0.uuid, $0.center) })
 
         return BlockCommand(
@@ -132,7 +132,7 @@ public final class LayoutCommand: BaseCommand {
         self.target = target
     }
 
-    override func makeCommand() -> Command? {
+    override func makeCommand() -> Command {
         // Layout = Move objects + Collission Detection
         let moveCommands = zip(self.moveables.indices, self.moveables).map { index, moveable -> MoveCommand in
             let y = self.target.y + CGFloat(index) * 10.0
@@ -156,7 +156,7 @@ public final class DisplayCommand: BaseCommand {
         self.outputStreamPointer = outputStream
     }
 
-    override func makeCommand() -> Command? {
+    override func makeCommand() -> Command {
         return BlockCommand(block: { self.outputStreamPointer.pointee.write("Priting displayable with title: \(self.displayable.title)") },
                             inverseBlock: { } )
     }

@@ -15,7 +15,9 @@ func main() {
 }
 
 private func testBasics() {
+    let undoManager = CommandUndoHandler()
     let commander = CommandDispatcher(validator: AppValidator(appMode: AppMode(mode: .full)))
+    commander.handlers.append(undoManager)
 
     let shape = Shape()
     let move = MoveCommand(moveable: shape, offset: CGVector(dx: 10.0, dy: 5.0))
@@ -27,73 +29,75 @@ private func testBasics() {
     // test move
     commander.invoke(move)
     expect(shape.center == CGPoint(x: 10.0, y: 5.0))
-    expect(commander.commands.count == 1)
-    expect(commander.undoneCommands.count == 0)
+    expect(undoManager.commands.count == 1)
+    expect(undoManager.undoneCommands.count == 0)
 
     commander.invoke(move)
     expect(shape.center == CGPoint(x: 20.0, y: 10.0))
-    expect(commander.commands.count == 2)
-    expect(commander.undoneCommands.count == 0)
+    expect(undoManager.commands.count == 2)
+    expect(undoManager.undoneCommands.count == 0)
 
     // test undo
-    try! commander.undo()
+    try! undoManager.undo()
     expect(shape.center == CGPoint(x: 10.0, y: 5.0))
-    expect(commander.commands.count == 1)
-    expect(commander.undoneCommands.count == 1)
+    expect(undoManager.commands.count == 1)
+    expect(undoManager.undoneCommands.count == 1)
 
     // test redo
-    try! commander.redo()
+    try! undoManager.redo()
     expect(shape.center == CGPoint(x: 20.0, y: 10.0))
-    expect(commander.commands.count == 2)
-    expect(commander.undoneCommands.count == 0)
+    expect(undoManager.commands.count == 2)
+    expect(undoManager.undoneCommands.count == 0)
 
     // test grouping
     let groupedIdentityMove = GroupCommand(commands: [move, move.inversed()])
     commander.invoke(groupedIdentityMove)
     expect(shape.center == CGPoint(x: 20.0, y: 10.0))
-    expect(commander.commands.count == 3)
-    expect(commander.undoneCommands.count == 0)
+    expect(undoManager.commands.count == 3)
+    expect(undoManager.undoneCommands.count == 0)
 
     let groupedDoubleMove = GroupCommand(commands: [move, move])
     commander.invoke(groupedDoubleMove.inversed())
     expect(shape.center == .zero)
-    expect(commander.commands.count == 4)
-    expect(commander.undoneCommands.count == 0)
+    expect(undoManager.commands.count == 4)
+    expect(undoManager.undoneCommands.count == 0)
 
     // test undo loop
-    while !commander.commands.isEmpty { try! commander.undo() }
+    while !undoManager.commands.isEmpty { try! undoManager.undo() }
     expect(shape.center == .zero)
-    expect(commander.commands.count == 0)
-    expect(commander.undoneCommands.count == 4)
+    expect(undoManager.commands.count == 0)
+    expect(undoManager.undoneCommands.count == 4)
 
     // test undo/redo counts
-    try! commander.redo(numberOfCommands: 4)
+    try! undoManager.redo(numberOfCommands: 4)
     expect(shape.center == .zero)
-    expect(commander.commands.count == 4)
-    expect(commander.undoneCommands.count == 0)
+    expect(undoManager.commands.count == 4)
+    expect(undoManager.undoneCommands.count == 0)
 
-    try! commander.undo(numberOfCommands: 4)
+    try! undoManager.undo(numberOfCommands: 4)
     expect(shape.center == .zero)
-    expect(commander.commands.count == 0)
-    expect(commander.undoneCommands.count == 4)
+    expect(undoManager.commands.count == 0)
+    expect(undoManager.undoneCommands.count == 4)
 
     // test title setting
     let updateTitle = UpdateTitleCommand(displayable: shape, title: "A Shape")
     commander.invoke(updateTitle)
     expect(shape.center == .zero)
     expect(shape.title == "A Shape")
-    expect(commander.commands.count == 1)
-    expect(commander.undoneCommands.count == 0)
+    expect(undoManager.commands.count == 1)
+    expect(undoManager.undoneCommands.count == 0)
 
     let updateTitle2 = UpdateTitleCommand(displayable: shape, title: "A New Shape")
     commander.invoke(updateTitle2)
     expect(shape.title == "A New Shape")
-    try! commander.undo()
+    try! undoManager.undo()
     expect(shape.title == "A Shape")
 }
 
 private func testLayout() {
+    let undoManager = CommandUndoHandler()
     let commander = CommandDispatcher(validator: AppValidator(appMode: AppMode(mode: .full)))
+    commander.handlers.append(undoManager)
 
     let shapes = [Shape(), Shape(), Shape(), Shape(), Shape(), Shape(), Shape(), Shape(), Shape(), Shape()]
     for (index, shape) in zip(shapes.indices, shapes) {
@@ -111,7 +115,7 @@ private func testLayout() {
         expect(shape.center.y == CGFloat(index * 10), description: "Verifying y for shape \(shape)")
     }
 
-    try! commander.undo()
+    try! undoManager.undo()
 
     Thread.sleep(forTimeInterval: 1.0)
 

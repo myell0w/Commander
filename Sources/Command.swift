@@ -44,8 +44,9 @@ extension State: Hashable, Equatable {
 /// The base interface for any executable command
 public protocol Command: class, CustomStringConvertible {
 
-    var timestamp: Date? { get }
+    // TODO: var uuid: UUID
     var state: State { get set }
+    var timestamp: Date? { get }
     var isAsynchronous: Bool { get }
     var isMutating: Bool { get }
 

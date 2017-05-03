@@ -12,7 +12,7 @@ import Foundation
 /// a base (convenience) implementation of a Command
 public class BaseCommand: Command {
 
-    public lazy var command: Command = self.makeCommand()!
+    public lazy var command: Command = self.makeCommand()
     public var state: State = .ready
 
     // MARK: - Command
@@ -39,8 +39,7 @@ public class BaseCommand: Command {
 
     // MARK: - BaseCommand
 
-    func makeCommand() -> Command? {
-        // subclasses must implement
-        return nil
+    func makeCommand() -> Command {
+        fatalError("Subclasses must implement")
     }
 }
