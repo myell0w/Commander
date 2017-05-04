@@ -8,11 +8,12 @@
 
 import Foundation
 import CoreGraphics
+import Commands
 
 
 // MARK: - Model
 
-public protocol Moveable: class {
+protocol Moveable: class {
 
     var uuid: UUID { get }
     var center: CGPoint { get set }
@@ -20,40 +21,40 @@ public protocol Moveable: class {
     func move(by offset: CGVector)
 }
 
-public protocol Displayable: class {
+protocol Displayable: class {
 
     var title: String { get set }
 }
 
-public final class Shape: Moveable, Displayable, CustomStringConvertible {
+final class Shape: Moveable, Displayable, CustomStringConvertible {
 
     private(set) public var uuid = UUID()
-    public var center: CGPoint = .zero
-    public var title: String = ""
+    var center: CGPoint = .zero
+    var title: String = ""
 
-    public func move(by offset: CGVector) {
+    func move(by offset: CGVector) {
         self.center = self.center.applying(.init(translationX: offset.dx, y: offset.dy))
     }
 
-    public var description: String {
+    var description: String {
         return "<Shape \(self.title), center = \(self.center), uuid = \(self.uuid)>"
     }
 }
 
 // MARK: - Commands
 
-public final class MoveCommand: BaseCommand {
+final class MoveCommand: BaseCommand {
 
     private let moveable: Moveable
     private let offset: CGVector
 
-    public init(moveable: Moveable, offset: CGVector) {
+    init(moveable: Moveable, offset: CGVector) {
         self.moveable = moveable
         self.offset = offset
-        super.init()
+        super.init(isAsynchronous: false, isMutating: true)
     }
 
-    public convenience init(moveable: Moveable, target: CGPoint) {
+    convenience init(moveable: Moveable, target: CGPoint) {
         let offset = CGVector(dx: target.x - moveable.center.x, dy: target.y - moveable.center.y)
         self.init(moveable: moveable, offset: offset)
     }
@@ -66,14 +67,15 @@ public final class MoveCommand: BaseCommand {
     }
 }
 
-public final class UpdateTitleCommand: BaseCommand {
+final class UpdateTitleCommand: BaseCommand {
 
     private let displayable: Displayable
     private let title: String
 
-    public init(displayable: Displayable, title: String) {
+    init(displayable: Displayable, title: String) {
         self.displayable = displayable
         self.title = title
+        super.init(isAsynchronous: false, isMutating: true)
     }
 
     override func makeCommand() -> Command {
@@ -84,15 +86,13 @@ public final class UpdateTitleCommand: BaseCommand {
     }
 }
 
-public final class CollissionDetectionCommand: BaseCommand {
+final class CollissionDetectionCommand: BaseCommand {
 
     private let moveables: [Moveable]
-    override public var isAsynchronous: Bool {
-        return true
-    }
 
-    public init(moveables: [Moveable]) {
+    init(moveables: [Moveable]) {
         self.moveables = moveables
+        super.init(isAsynchronous: true, isMutating: true)
     }
 
     override func makeCommand() -> Command {
@@ -123,14 +123,15 @@ public final class CollissionDetectionCommand: BaseCommand {
     }
 }
 
-public final class LayoutCommand: BaseCommand {
+final class LayoutCommand: BaseCommand {
 
     private let moveables: [Moveable]
     private let target: CGPoint
 
-    public init(moveables: [Moveable], target: CGPoint) {
+    init(moveables: [Moveable], target: CGPoint) {
         self.moveables = moveables
         self.target = target
+        super.init(isAsynchronous: true, isMutating: true)
     }
 
     override func makeCommand() -> Command {
@@ -144,17 +145,15 @@ public final class LayoutCommand: BaseCommand {
     }
 }
 
-public final class DisplayCommand: BaseCommand {
+final class DisplayCommand: BaseCommand {
 
     private let displayable: Displayable
     private let outputStreamPointer: UnsafeMutablePointer<TextOutputStream>
-    override public var isMutating: Bool {
-        return false
-    }
 
-    public init(displayable: Displayable, outputStream: UnsafeMutablePointer<TextOutputStream>) {
+    init(displayable: Displayable, outputStream: UnsafeMutablePointer<TextOutputStream>) {
         self.displayable = displayable
         self.outputStreamPointer = outputStream
+        super.init(isAsynchronous: false, isMutating: false)
     }
 
     override func makeCommand() -> Command {
@@ -205,7 +204,7 @@ final class AppValidator: CommandValidator {
     }
 
     // MARK: - CommandValidator
-
+    
     func validate(command: Command) -> Bool {
         if !command.isMutating {
             return true

@@ -8,6 +8,7 @@
 
 import XCTest
 @testable import Commander
+@testable import Commands
 
 
 class CommanderTests: XCTestCase {

@@ -10,23 +10,25 @@ import Foundation
 
 
 /// a base (convenience) implementation of a Command
-public class BaseCommand {
+open class BaseCommand {
 
     public lazy var command: Command = self.makeCommand()
 
     // (from Command) - Swift doesn't allow to move Properties to extensions (yet)
     public var state: State = .ready
-    public var isAsynchronous: Bool {
-        return false
-    }
+    public let isAsynchronous: Bool
+    public let isMutating: Bool
 
-    public var isMutating: Bool {
-        return true
+    // MARK: - Lifecycle
+
+    public init(isAsynchronous: Bool = false, isMutating: Bool = true) {
+        self.isAsynchronous = isAsynchronous
+        self.isMutating = isMutating
     }
 
     // MARK: - BaseCommand
 
-    func makeCommand() -> Command {
+    open func makeCommand() -> Command {
         fatalError("Subclasses must implement")
     }
 }
