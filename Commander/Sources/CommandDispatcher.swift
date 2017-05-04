@@ -11,6 +11,7 @@ import Foundation
 
 public protocol CommandDispatcherDelegate: class {
 
+    func commandDispatcher(_ commandDispatcher: CommandDispatcher, didInvokeCommand command: Command)
     func commandDispatcher(_ commandDispatcher: CommandDispatcher, didForbidCommand command: Command)
 }
 
@@ -18,7 +19,7 @@ public protocol CommandDispatcherDelegate: class {
 /// Controller class to invoke/dispatch commands
 public final class CommandDispatcher {
 
-    fileprivate let validator: CommandValidator
+    fileprivate let validator: CommandValidator?
     
 
     // MARK: - Properties
@@ -28,14 +29,14 @@ public final class CommandDispatcher {
 
     // MARK: - Lifecycle
 
-    init(validator: CommandValidator) {
+    init(validator: CommandValidator? = nil) {
         self.validator = validator
     }
 
     // MARK: - CommandDispatcher
 
     public func canInvoke(_ command: Command) -> Bool {
-        return self.validator.validate(command: command)
+        return self.validator?.validate(command: command) ?? true
     }
 
     public func invoke(_ command: Command) {
@@ -45,16 +46,9 @@ public final class CommandDispatcher {
             return
         }
 
-        self.handleCommand(command)
-        self.handlers.forEach { $0.handleCommand(command) }
-    }
-}
-
-// MARK: - CommandHandler
-
-extension CommandDispatcher: CommandHandler {
-
-    public func handleCommand(_ command: Command) {
         command.invoke()
+        self.handlers.forEach { $0.handleCommand(command) }
+
+        self.delegate?.commandDispatcher(self, didInvokeCommand: command)
     }
 }
