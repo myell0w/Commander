@@ -21,15 +21,14 @@ public final class CommandDispatcher {
 
     fileprivate let validator: CommandValidator?
     
-
     // MARK: - Properties
 
-    weak var delegate: CommandDispatcherDelegate?
-    var handlers: [CommandHandler] = []
+    public weak var delegate: CommandDispatcherDelegate?
+    public var handlers: [CommandHandler] = []
 
     // MARK: - Lifecycle
 
-    init(validator: CommandValidator? = nil) {
+    public init(validator: CommandValidator? = nil) {
         self.validator = validator
     }
 
