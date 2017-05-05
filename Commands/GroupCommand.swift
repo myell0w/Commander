@@ -50,8 +50,12 @@ extension GroupCommand: Command {
         }
     }
 
-    public var isAsynchronous: Bool {
-        return self.commands.lazy.filter({ $0.isAsynchronous }).isEmpty == false
+    public var description: String {
+        var commandsDescription = self.commands.reduce("") { $0 + "  " + $1.description + "\n" }
+        let lastIndex = commandsDescription.index(before: commandsDescription.endIndex)
+        commandsDescription = commandsDescription.substring(to: lastIndex)
+
+        return "Command <\(type(of: self)) - state:\(self.state), isMutating:\(self.isMutating)>" + commandsDescription
     }
 
     public var isMutating: Bool {

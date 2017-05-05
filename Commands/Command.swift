@@ -47,7 +47,6 @@ public protocol Command: class, CustomStringConvertible {
     // TODO: var uuid: UUID
     var state: State { get set }
     var timestamp: Date? { get }
-    var isAsynchronous: Bool { get }
     var isMutating: Bool { get }
 
     func invoke()
@@ -68,7 +67,7 @@ public extension Command {
     }
 
     var description: String {
-        return "Command <\(type(of: self)) - state:\(self.state), async:\(self.isAsynchronous)>"
+        return "Command <\(type(of: self)) - state:\(self.state), isMutating:\(self.isMutating)>"
     }
 
     func cancel() {

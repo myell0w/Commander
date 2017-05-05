@@ -16,13 +16,11 @@ open class BaseCommand {
 
     // (from Command) - Swift doesn't allow to move Properties to extensions (yet)
     public var state: State = .ready
-    public let isAsynchronous: Bool
     public let isMutating: Bool
 
     // MARK: - Lifecycle
 
-    public init(isAsynchronous: Bool = false, isMutating: Bool = true) {
-        self.isAsynchronous = isAsynchronous
+    public init(isMutating: Bool = true) {
         self.isMutating = isMutating
     }
 
@@ -40,9 +38,7 @@ extension BaseCommand: Command {
     public func invoke() {
         self.state = .executing
         self.command.invoke()
-        if self.isAsynchronous == false {
-            self.finish()
-        }
+        self.finish()
     }
 
     public func inversed() -> Command {

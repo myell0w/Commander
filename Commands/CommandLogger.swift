@@ -9,6 +9,7 @@
 import Foundation
 
 
+/// CommandHandler that logs commands to a TextOutputStream
 public final class CommandLogger {
 
     fileprivate let outputStreamPointer: UnsafeMutablePointer<TextOutputStream>?

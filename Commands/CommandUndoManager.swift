@@ -55,6 +55,11 @@ public final class CommandUndoManager {
             self.commands.append(command)
         }
     }
+
+    public func reset() {
+        self.commands.removeAll()
+        self.undoneCommands.removeAll()
+    }
 }
 
 // MARK: - CommandHandler

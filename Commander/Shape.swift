@@ -51,7 +51,7 @@ final class MoveCommand: BaseCommand {
     init(moveable: Moveable, offset: CGVector) {
         self.moveable = moveable
         self.offset = offset
-        super.init(isAsynchronous: false, isMutating: true)
+        super.init(isMutating: true)
     }
 
     convenience init(moveable: Moveable, target: CGPoint) {
@@ -75,7 +75,7 @@ final class UpdateTitleCommand: BaseCommand {
     init(displayable: Displayable, title: String) {
         self.displayable = displayable
         self.title = title
-        super.init(isAsynchronous: false, isMutating: true)
+        super.init(isMutating: true)
     }
 
     override func makeCommand() -> Command {
@@ -92,7 +92,7 @@ final class CollissionDetectionCommand: BaseCommand {
 
     init(moveables: [Moveable]) {
         self.moveables = moveables
-        super.init(isAsynchronous: true, isMutating: true)
+        super.init(isMutating: true)
     }
 
     override func makeCommand() -> Command {
@@ -131,7 +131,7 @@ final class LayoutCommand: BaseCommand {
     init(moveables: [Moveable], target: CGPoint) {
         self.moveables = moveables
         self.target = target
-        super.init(isAsynchronous: true, isMutating: true)
+        super.init(isMutating: true)
     }
 
     override func makeCommand() -> Command {
@@ -153,7 +153,7 @@ final class DisplayCommand: BaseCommand {
     init(displayable: Displayable, outputStream: UnsafeMutablePointer<TextOutputStream>) {
         self.displayable = displayable
         self.outputStreamPointer = outputStream
-        super.init(isAsynchronous: false, isMutating: false)
+        super.init(isMutating: false)
     }
 
     override func makeCommand() -> Command {
