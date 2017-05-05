@@ -24,12 +24,13 @@ public final class CommandDispatcher {
     // MARK: - Properties
 
     public weak var delegate: CommandDispatcherDelegate?
-    public var handlers: [CommandHandler] = []
+    public var handlers: [CommandHandler]
 
     // MARK: - Lifecycle
 
-    public init(validator: CommandValidator? = nil) {
+    public init(validator: CommandValidator? = nil, handlers: [CommandHandler] = [CommandInvoker()]) {
         self.validator = validator
+        self.handlers = handlers
     }
 
     // MARK: - CommandDispatcher
@@ -45,7 +46,6 @@ public final class CommandDispatcher {
             return
         }
 
-        command.invoke()
         self.handlers.forEach { $0.handleCommand(command) }
 
         self.delegate?.commandDispatcher(self, didInvokeCommand: command)
