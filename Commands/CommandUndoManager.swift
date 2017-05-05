@@ -19,10 +19,20 @@ public final class CommandUndoManager {
     fileprivate(set) var commands: [Command] = []
     fileprivate(set) var undoneCommands: [Command] = []
 
+    // MARK: - Lifecycle
+
+    public init() {
+        // just to make accessible
+    }
+
     // MARK: - CommandUndoManager
 
+    public func canUndo(numberOfCommands: Int = 1) -> Bool {
+        return self.commands.count >= numberOfCommands
+    }
+
     public func undo(numberOfCommands: Int = 1) throws {
-        guard self.commands.count >= numberOfCommands else { throw Error.undo }
+        guard self.canUndo(numberOfCommands: numberOfCommands) else { throw Error.undo }
 
         let commandsToUndo = self.commands.remove(last: numberOfCommands).reversed()
         commandsToUndo.forEach { command in
@@ -32,8 +42,12 @@ public final class CommandUndoManager {
         }
     }
 
+    public func canRedo(numberOfCommands: Int = 1) -> Bool {
+        return self.undoneCommands.count >= numberOfCommands
+    }
+
     public func redo(numberOfCommands: Int = 1) throws {
-        guard self.undoneCommands.count >= numberOfCommands else { throw Error.redo }
+        guard self.canRedo(numberOfCommands: numberOfCommands) else { throw Error.redo }
 
         let commandsToRedo = self.undoneCommands.remove(first: numberOfCommands)
         commandsToRedo.forEach { command in
