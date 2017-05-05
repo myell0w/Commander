@@ -55,7 +55,7 @@ extension GroupCommand: Command {
         let lastIndex = commandsDescription.index(before: commandsDescription.endIndex)
         commandsDescription = commandsDescription.substring(to: lastIndex)
 
-        return "Command <\(type(of: self)) - state:\(self.state), isMutating:\(self.isMutating)>" + commandsDescription
+        return "Command <\(type(of: self)) - state:\(self.state), isMutating:\(self.isMutating)>\n" + commandsDescription
     }
 
     public var isMutating: Bool {
