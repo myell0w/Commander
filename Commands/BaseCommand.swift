@@ -41,7 +41,9 @@ extension BaseCommand: Command {
         self.finish()
     }
 
-    public func inversed() -> Command {
-        return self.command.inversed()
+    public func inverse() {
+        self.state = .executing
+        self.command.inverse()
+        self.state = .ready
     }
 }

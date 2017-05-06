@@ -66,8 +66,7 @@ extension GroupCommand: Command {
         self.commands.forEach { $0.invoke() }
     }
 
-    public func inversed() -> Command {
-        let inversedCommands = self.commands.reversed().map { $0.inversed() }
-        return GroupCommand(commands: inversedCommands)
+    public func inverse() {
+        self.commands.reversed().forEach { $0.inverse() }
     }
 }

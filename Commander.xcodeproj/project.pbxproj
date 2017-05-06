@@ -30,6 +30,7 @@
 		9B7990D61EBCBE51008B9D26 /* CommandInvoker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B7990D51EBCBE51008B9D26 /* CommandInvoker.swift */; };
 		9B7990D81EBCC008008B9D26 /* CommandLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B7990D71EBCC007008B9D26 /* CommandLogger.swift */; };
 		9B7990DA1EBCC575008B9D26 /* TargetActionCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B7990D91EBCC575008B9D26 /* TargetActionCommand.swift */; };
+		9BB6C0831EBE7F3700FFFC76 /* InverseCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB6C0821EBE7F3700FFFC76 /* InverseCommand.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -106,6 +107,7 @@
 		9B7990D51EBCBE51008B9D26 /* CommandInvoker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommandInvoker.swift; sourceTree = "<group>"; };
 		9B7990D71EBCC007008B9D26 /* CommandLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommandLogger.swift; sourceTree = "<group>"; };
 		9B7990D91EBCC575008B9D26 /* TargetActionCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TargetActionCommand.swift; sourceTree = "<group>"; };
+		9BB6C0821EBE7F3700FFFC76 /* InverseCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InverseCommand.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -193,7 +195,6 @@
 			children = (
 				9B7990B81EBB7402008B9D26 /* BaseCommand.swift */,
 				9B7990B91EBB7402008B9D26 /* BlockCommand.swift */,
-				9B7990D91EBCC575008B9D26 /* TargetActionCommand.swift */,
 				9B7990BF1EBB7402008B9D26 /* Command.swift */,
 				9B7990B71EBB7402008B9D26 /* CommandDispatcher.swift */,
 				9B7990BD1EBB7402008B9D26 /* CommandHandler.swift */,
@@ -204,6 +205,8 @@
 				9B7990BA1EBB7402008B9D26 /* CommandValidator.swift */,
 				9B7990BB1EBB7402008B9D26 /* GroupCommand.swift */,
 				9B79909C1EBB73A5008B9D26 /* Info.plist */,
+				9BB6C0821EBE7F3700FFFC76 /* InverseCommand.swift */,
+				9B7990D91EBCC575008B9D26 /* TargetActionCommand.swift */,
 			);
 			path = Commands;
 			sourceTree = "<group>";
@@ -428,6 +431,7 @@
 				9B7990C81EBB7402008B9D26 /* Command.swift in Sources */,
 				9B7990C01EBB7402008B9D26 /* CommandDispatcher.swift in Sources */,
 				9B7990D61EBCBE51008B9D26 /* CommandInvoker.swift in Sources */,
+				9BB6C0831EBE7F3700FFFC76 /* InverseCommand.swift in Sources */,
 				9B7990C51EBB7402008B9D26 /* CommandUndoManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

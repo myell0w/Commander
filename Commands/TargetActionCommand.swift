@@ -22,7 +22,7 @@ public final class TargetActionCommand {
 
     // MARK: - Lifecycle
 
-    public init(target: NSObject?, action: Selector, inverseAction: Selector, isMutating: Bool = true) {
+    public init(target: NSObject, action: Selector, inverseAction: Selector, isMutating: Bool = true) {
         self.target = target
         self.action = action
         self.inverseAction = inverseAction
@@ -42,10 +42,11 @@ extension TargetActionCommand: Command {
         self.finish()
     }
 
-    public func inversed() -> Command {
-        return TargetActionCommand(target: self.target,
-                                   action: self.inverseAction,
-                                   inverseAction: self.action,
-                                   isMutating: self.isMutating)
+    public func inverse() {
+        guard let target = self.target else { return }
+
+        self.state = .executing
+        target.perform(self.inverseAction)
+        self.state = .ready
     }
 }

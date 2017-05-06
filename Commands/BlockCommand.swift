@@ -40,9 +40,9 @@ extension BlockCommand: Command {
         self.finish()
     }
 
-    public func inversed() -> Command {
-        return BlockCommand(block: self.inverseExecutionBlock,
-                            inverseBlock: self.executionBlock,
-                            isMutating: self.isMutating)
+    public func inverse() {
+        self.state = .executing
+        self.inverseExecutionBlock()
+        self.state = .ready
     }
 }

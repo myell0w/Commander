@@ -49,14 +49,14 @@ class CommanderTests: XCTestCase {
         XCTAssertTrue(undoManager.undoneCommands.count == 0)
 
         // test grouping
-        let groupedIdentityMove = GroupCommand(commands: [move, move.inversed()])
+        let groupedIdentityMove = GroupCommand(commands: [move, InverseCommand(command: move)])
         commander.invoke(groupedIdentityMove)
         XCTAssertTrue(shape.center == CGPoint(x: 20.0, y: 10.0))
         XCTAssertTrue(undoManager.commands.count == 3)
         XCTAssertTrue(undoManager.undoneCommands.count == 0)
 
-        let groupedDoubleMove = GroupCommand(commands: [move, move])
-        commander.invoke(groupedDoubleMove.inversed())
+        let groupedDoubleMove = InverseCommand(command: GroupCommand(commands: [move, move]))
+        commander.invoke(groupedDoubleMove)
         XCTAssertTrue(shape.center == .zero)
         XCTAssertTrue(undoManager.commands.count == 4)
         XCTAssertTrue(undoManager.undoneCommands.count == 0)

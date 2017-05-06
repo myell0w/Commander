@@ -47,7 +47,7 @@ public protocol Command: class, CustomStringConvertible {
     var isMutating: Bool { get }
 
     func invoke()
-    func inversed() -> Command
+    func inverse()
     func finish()
 }
 
