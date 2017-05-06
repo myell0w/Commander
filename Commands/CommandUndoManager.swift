@@ -10,8 +10,8 @@ import Foundation
 
 public protocol CommandUndoManagerDelegate: class {
 
-    func commandUndoManager(_ undoManager: CommandUndoManager, didUndoCommand: Command)
-    func commandUndoManager(_ undoManager: CommandUndoManager, didRedoCommand: Command)
+    func commandUndoManager(_ undoManager: CommandUndoManager, didUndoCommand command: Command)
+    func commandUndoManager(_ undoManager: CommandUndoManager, didRedoCommand command: Command)
 }
 
 
