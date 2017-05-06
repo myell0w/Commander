@@ -8,6 +8,12 @@
 
 import Foundation
 
+public protocol CommandUndoManagerDelegate: class {
+
+    func commandUndoManager(_ undoManager: CommandUndoManager, didUndoCommand: Command)
+    func commandUndoManager(_ undoManager: CommandUndoManager, didRedoCommand: Command)
+}
+
 
 public final class CommandUndoManager {
 
@@ -18,6 +24,10 @@ public final class CommandUndoManager {
 
     fileprivate(set) var commands: [Command] = []
     fileprivate(set) var undoneCommands: [Command] = []
+
+    // MARK: - Properties
+
+    public weak var delegate: CommandUndoManagerDelegate?
 
     // MARK: - Lifecycle
 
@@ -36,9 +46,9 @@ public final class CommandUndoManager {
 
         let commandsToUndo = self.commands.remove(last: numberOfCommands).reversed()
         commandsToUndo.forEach { command in
-            command.cancel()
             command.inversed().invoke()
             self.undoneCommands.append(command)
+            self.delegate?.commandUndoManager(self, didUndoCommand: command)
         }
     }
 
@@ -53,6 +63,7 @@ public final class CommandUndoManager {
         commandsToRedo.forEach { command in
             command.invoke()
             self.commands.append(command)
+            self.delegate?.commandUndoManager(self, didRedoCommand: command)
         }
     }
 

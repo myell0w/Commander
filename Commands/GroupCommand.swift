@@ -70,8 +70,4 @@ extension GroupCommand: Command {
         let inversedCommands = self.commands.reversed().map { $0.inversed() }
         return GroupCommand(commands: inversedCommands)
     }
-
-    public func cancel() {
-        self.commands.forEach { $0.cancel() }
-    }
 }

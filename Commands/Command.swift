@@ -15,7 +15,6 @@ public enum State {
     case ready
     case executing
     case finished(timestamp: Date)
-    case canceled
     case forbidden
 }
 
@@ -29,10 +28,8 @@ extension State: Hashable, Equatable {
             return 1
         case .finished(timestamp: _):
             return 2
-        case .canceled:
-            return 3
         case .forbidden:
-            return 4
+            return 3
         }
     }
 
@@ -51,8 +48,6 @@ public protocol Command: class, CustomStringConvertible {
 
     func invoke()
     func inversed() -> Command
-
-    func cancel()
     func finish()
 }
 
@@ -68,13 +63,6 @@ public extension Command {
 
     var description: String {
         return "Command <\(type(of: self)) - state:\(self.state), isMutating:\(self.isMutating)>"
-    }
-
-    func cancel() {
-        if case .finished(_) = self.state { return }
-        if case .forbidden = self.state { return }
-
-        self.state = .canceled
     }
 
     func finish() {
