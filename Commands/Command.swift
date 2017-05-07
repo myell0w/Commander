@@ -62,11 +62,24 @@ public extension Command {
     }
 
     var description: String {
-        return "Command <\(type(of: self)) - state:\(self.state), isMutating:\(self.isMutating)>"
+        let mirror = Mirror(reflecting: self)
+        var fieldDescription = mirror.children.reduce("") { description, child in
+            guard let label = child.label else { return description }
+
+            let value = child.value is [Any] ? "[Array]" : child.value
+            return description + "\(label): \(value), "
+        }
+        let lastIndex = fieldDescription.index(fieldDescription.endIndex, offsetBy: -2)
+        fieldDescription = fieldDescription.substring(to: lastIndex)
+
+        return "<\(type(of: self)) state: \(self.state)> { \(fieldDescription) }"
     }
 
     func finish() {
-        guard case .executing = self.state else { return }
+        guard case .executing = self.state else {
+            assertionFailure("finish() was called on a Command that's not executing")
+            return
+        }
 
         self.state = .finished(timestamp: Date())
     }

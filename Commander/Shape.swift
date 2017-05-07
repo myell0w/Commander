@@ -109,7 +109,6 @@ final class CollissionDetectionCommand: BaseCommand {
 
                     let groupCommand = GroupCommand(commands: moveCommands)
                     groupCommand.invoke()
-                    self.finish()
                 }
         },
             inverseBlock: {

@@ -42,6 +42,11 @@ public final class CommandDispatcher {
     }
 
     public func invoke(_ command: Command) {
+//        guard command.state == .ready else {
+//            assertionFailure("Trying to invoke a Command that is not ready")
+//            return
+//        }
+
         guard self.canInvoke(command) else {
             command.state = .forbidden
             self.delegate?.commandDispatcher(self, didForbidCommand: command)

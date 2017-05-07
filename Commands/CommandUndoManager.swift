@@ -59,7 +59,7 @@ public final class CommandUndoManager {
     public func redo(numberOfCommands: Int = 1) throws {
         guard self.canRedo(numberOfCommands: numberOfCommands) else { throw Error.redo }
 
-        let commandsToRedo = self.undoneCommands.remove(first: numberOfCommands)
+        let commandsToRedo = self.undoneCommands.remove(last: numberOfCommands).reversed()
         commandsToRedo.forEach { command in
             command.invoke()
             self.commands.append(command)
@@ -86,13 +86,6 @@ extension CommandUndoManager: CommandHandler {
 // MARK: - Private
 
 private extension Array {
-
-    mutating func remove(first elementCount: Int) -> ArraySlice<Element> {
-        let slices = (self.dropFirst(elementCount), self.prefix(elementCount))
-
-        self = Array(slices.0)
-        return slices.1
-    }
 
     mutating func remove(last elementCount: Int) -> ArraySlice<Element> {
         let slices = (self.dropLast(elementCount), self.suffix(elementCount))
