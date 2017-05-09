@@ -19,19 +19,19 @@ class CommanderTests: XCTestCase {
         commander.handlers.append(undoManager)
 
         let shape = Shape()
-        let move = MoveCommand(moveable: shape, offset: CGVector(dx: 10.0, dy: 5.0))
+        let move = { MoveCommand(moveable: shape, offset: CGVector(dx: 10.0, dy: 5.0)) }
 
         // test preconditions
         XCTAssertTrue(shape.center == .zero)
         XCTAssertTrue(shape.title == "")
 
         // test move
-        commander.invoke(move)
+        commander.invoke(move())
         XCTAssertTrue(shape.center == CGPoint(x: 10.0, y: 5.0))
         XCTAssertTrue(undoManager.commands.count == 1)
         XCTAssertTrue(undoManager.undoneCommands.count == 0)
 
-        commander.invoke(move)
+        commander.invoke(move())
         XCTAssertTrue(shape.center == CGPoint(x: 20.0, y: 10.0))
         XCTAssertTrue(undoManager.commands.count == 2)
         XCTAssertTrue(undoManager.undoneCommands.count == 0)
@@ -49,13 +49,13 @@ class CommanderTests: XCTestCase {
         XCTAssertTrue(undoManager.undoneCommands.count == 0)
 
         // test grouping
-        let groupedIdentityMove = GroupCommand(commands: [move, InverseCommand(command: move)])
+        let groupedIdentityMove = GroupCommand(commands: [move(), InverseCommand(command: move())])
         commander.invoke(groupedIdentityMove)
         XCTAssertTrue(shape.center == CGPoint(x: 20.0, y: 10.0))
         XCTAssertTrue(undoManager.commands.count == 3)
         XCTAssertTrue(undoManager.undoneCommands.count == 0)
 
-        let groupedDoubleMove = InverseCommand(command: GroupCommand(commands: [move, move]))
+        let groupedDoubleMove = InverseCommand(command: GroupCommand(commands: [move(), move()]))
         commander.invoke(groupedDoubleMove)
         XCTAssertTrue(shape.center == .zero)
         XCTAssertTrue(undoManager.commands.count == 4)

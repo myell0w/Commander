@@ -78,6 +78,9 @@ public final class CommandUndoManager {
 extension CommandUndoManager: CommandHandler {
 
     public func handleCommand(_ command: Command) {
+        // no need to track non-mutating commands
+        guard command.isMutating else { return }
+
         self.commands.append(command)
         self.undoneCommands.removeAll()
     }
