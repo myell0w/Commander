@@ -56,7 +56,8 @@ public final class CommandDispatcher {
         self.isDispatching = true
         self.delegate?.commandDispatcher(self, willDispatchCommand: command)
 
-        self.handlers.forEach { $0.handleCommand(command) }
+        let handlers = self.handlers.filter { $0.isEnabled }
+        handlers.forEach { $0.handleCommand(command) }
 
         self.delegate?.commandDispatcher(self, didDispatchCommand: command)
         self.isDispatching = false

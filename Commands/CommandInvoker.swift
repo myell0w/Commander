@@ -12,6 +12,11 @@ import Foundation
 /// CommandHandler that simply invokes a command
 public final class CommandInvoker {
 
+    // MARK: - Properties
+
+    // (from CommandHandler) - Swift doesn't allow to move Properties to extensions (yet)
+    public var isEnabled: Bool = true
+
     // MARK: - Lifecycle
 
     public init() {

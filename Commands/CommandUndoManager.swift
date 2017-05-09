@@ -28,6 +28,8 @@ public final class CommandUndoManager {
     // MARK: - Properties
 
     public weak var delegate: CommandUndoManagerDelegate?
+    // (from CommandHandler) - Swift doesn't allow to move Properties to extensions (yet)
+    public var isEnabled: Bool = true
 
     // MARK: - Lifecycle
 
@@ -78,7 +80,6 @@ public final class CommandUndoManager {
 extension CommandUndoManager: CommandHandler {
 
     public func handleCommand(_ command: Command) {
-        // no need to track non-mutating commands
         guard command.isMutating else { return }
 
         self.commands.append(command)

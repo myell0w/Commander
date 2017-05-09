@@ -14,6 +14,11 @@ public final class CommandLogger {
 
     fileprivate let outputStreamPointer: UnsafeMutablePointer<TextOutputStream>?
 
+    // MARK: - Properties
+
+    // (from CommandHandler) - Swift doesn't allow to move Properties to extensions (yet)
+    public var isEnabled: Bool = true
+
     // MARK: - Lifecycle
 
     public init(outputStream: UnsafeMutablePointer<TextOutputStream>? = nil) {
