@@ -21,6 +21,8 @@ public protocol CommandDispatcherDelegate: class {
 public final class CommandDispatcher {
 
     fileprivate let validator: CommandValidator?
+    fileprivate var isInTransaction: Bool = false
+    fileprivate var transactionStore: CommandStore = CommandStore()
     
     // MARK: - Properties
 
@@ -42,6 +44,11 @@ public final class CommandDispatcher {
     }
 
     public func invoke(_ command: Command) {
+        guard self.isInTransaction == false else {
+            self.transactionStore.handleCommand(command)
+            return
+        }
+
         guard command.state == .ready else {
             assertionFailure("Trying to invoke a Command that is not ready")
             return
@@ -61,5 +68,20 @@ public final class CommandDispatcher {
 
         self.delegate?.commandDispatcher(self, didDispatchCommand: command)
         self.isDispatching = false
+    }
+
+    public func withTransaction(_ work: () -> Void) {
+        guard self.isInTransaction == false else {
+            assertionFailure("Trying to group while already grouping")
+            return
+        }
+
+        assert(self.transactionStore.commands.isEmpty)
+
+        self.isInTransaction = true
+        work()
+        self.isInTransaction = false
+
+        self.applyStore(self.transactionStore, grouped: true)
     }
 }
