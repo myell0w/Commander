@@ -10,7 +10,7 @@ import Foundation
 
 
 /// a CommandHandler is any object, that can trigger actions based on a specific command
-public protocol CommandHandler {
+public protocol CommandHandler: class {
 
     var isEnabled: Bool { get set }
 

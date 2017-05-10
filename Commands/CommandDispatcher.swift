@@ -69,6 +69,11 @@ public final class CommandDispatcher {
         self.delegate?.commandDispatcher(self, didDispatchCommand: command)
         self.isDispatching = false
     }
+}
+
+// MARK: - Convenience Methods
+
+extension CommandDispatcher {
 
     public func withTransaction(_ work: () -> Void) {
         guard self.isInTransaction == false else {
@@ -82,6 +87,20 @@ public final class CommandDispatcher {
         work()
         self.isInTransaction = false
 
-        self.applyStore(self.transactionStore, grouped: true)
+        self.applyStore(self.transactionStore, asTransaction: true)
+    }
+
+    public func withDisabledHandler(_ handler: CommandHandler, work: () -> Void) {
+        self.withDisabledHandlers([handler], work: work)
+    }
+
+    public func withDisabledHandlers(_ handlers: [CommandHandler], work: () -> Void) {
+        let enabledSnapshot: [(handler: CommandHandler, isEnabled: Bool)] = handlers.map { ($0, $0.isEnabled) }
+        defer {
+            enabledSnapshot.forEach { $0.handler.isEnabled = $0.isEnabled }
+        }
+
+        handlers.forEach { $0.isEnabled = false }
+        self.withTransaction(work)
     }
 }

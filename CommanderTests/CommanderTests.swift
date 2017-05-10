@@ -141,29 +141,4 @@ class CommanderTests: XCTestCase {
         XCTAssertTrue(displayCommand.state == .finished(timestamp: Date()), "Verifiying state of display command")
         XCTAssertTrue((output as! String) == "Priting displayable with title: Original Title", "Verifiying output of display command")
     }
-
-    func testScratchpad() {
-        let shape = Shape()
-        let commander = CommandDispatcher()
-        let move = { MoveCommand(moveable: shape, offset: CGVector(dx: 10.0, dy: 5.0)) }
-
-        let scratchpad = CommandDispatcher.makeScratchpad { dispatcher in
-            dispatcher.invoke(move())
-            dispatcher.invoke(move())
-        }
-
-        // Commands shouldn't be invoked yet
-        XCTAssertEqual(scratchpad.commands.count, 2)
-        XCTAssertEqual(shape.center, .zero)
-        for command in scratchpad.commands {
-            XCTAssertEqual(command.state, .ready)
-        }
-
-        commander.applyStore(scratchpad)
-        XCTAssertEqual(scratchpad.commands.count, 0)
-        XCTAssertEqual(shape.center, CGPoint(x: 20.0, y: 10.0))
-        for command in scratchpad.commands {
-            XCTAssertEqual(command.state, .finished(timestamp: Date()))
-        }
-    }
 }

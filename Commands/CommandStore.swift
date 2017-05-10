@@ -44,21 +44,12 @@ extension CommandStore: CommandHandler {
 
 extension CommandDispatcher {
 
-    public static func makeScratchpad(_ work: (CommandDispatcher) -> Void) -> CommandStore {
-        let store = CommandStore()
-        let commandDispatcher = CommandDispatcher(handlers: [store])
-        work(commandDispatcher)
-        return store
-    }
-
-    public func applyStore(_ store: CommandStore, grouped: Bool = false) {
-        if grouped {
+    public func applyStore(_ store: CommandStore, asTransaction: Bool = false) {
+        if asTransaction {
             let groupCommand = GroupCommand(commands: store.commands)
             self.invoke(groupCommand)
         } else {
-            for command in store.commands {
-                self.invoke(command)
-            }
+            store.commands.forEach { self.invoke($0) }
         }
 
         store.reset()

@@ -44,7 +44,7 @@ public protocol Command: class, CustomStringConvertible {
     // TODO: var uuid: UUID
     var state: State { get set }
     var timestamp: Date? { get }
-    var isMutating: Bool { get }
+    var isMutating: Bool { get } // CQS
 
     func invoke()
     func inverse()
