@@ -9,7 +9,36 @@
 import Foundation
 
 
-/// A query is an invokable object, that has no side effects
-public protocol Query: Invokeable {
-    
+/// A query is an Invokable, that has no side effects
+public protocol Query: Invokeable { }
+
+
+/// Convenience Base Implementation of the Query Protocol
+open class BaseQuery {
+
+    // (from Invokeable) - Swift doesn't allow to move Properties to extensions (yet)
+    public var state: State = .ready
+
+    // MARK: - Lifecycle
+
+    public init() {
+        // just to make available
+    }
+
+    // MARK: - BaseQuery
+
+    open func performQuery() {
+        fatalError("Subclasses must implement")
+    }
+}
+
+// MARK: - Query
+
+extension BaseQuery: Query {
+
+    public func invoke() {
+        self.state = .executing
+        self.performQuery()
+        self.finish()
+    }
 }

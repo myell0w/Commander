@@ -48,7 +48,7 @@ public final class CommandUndoManager {
 
         let commandsToUndo = self.commands.remove(last: numberOfCommands).reversed()
         commandsToUndo.forEach { command in
-            command.inverse()
+            command.reverse()
             self.undoneCommands.append(command)
             self.delegate?.commandUndoManager(self, didUndoCommand: command)
         }

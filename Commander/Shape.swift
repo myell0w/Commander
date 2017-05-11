@@ -63,7 +63,7 @@ final class MoveCommand: BaseCommand {
         let inverseOffset = CGVector(dx: -self.offset.dx, dy: -self.offset.dy)
 
         return BlockCommand(block: { self.moveable.move(by: self.offset) },
-                            inverseBlock: { self.moveable.move(by: inverseOffset) })
+                            reverseBlock: { self.moveable.move(by: inverseOffset) })
     }
 }
 
@@ -82,7 +82,7 @@ final class UpdateTitleCommand: BaseCommand {
         let currentTitle = self.displayable.title
 
         return BlockCommand(block: { self.displayable.title = self.title },
-                            inverseBlock: { self.displayable.title = currentTitle })
+                            reverseBlock: { self.displayable.title = currentTitle })
     }
 }
 
@@ -111,7 +111,7 @@ final class CollissionDetectionCommand: BaseCommand {
                     groupCommand.invoke()
                 }
         },
-            inverseBlock: {
+            reverseBlock: {
                 let moveCommands = self.moveables.map {
                     return MoveCommand(moveable: $0, target: originalCenterPoints[$0.uuid]!)
                 }
@@ -144,21 +144,18 @@ final class LayoutCommand: BaseCommand {
     }
 }
 
-final class DisplayCommand: Query {
+final class DisplayCommand: BaseQuery {
 
     private let displayable: Displayable
     private let outputStreamPointer: UnsafeMutablePointer<TextOutputStream>
-    var state: State = .ready
 
     init(displayable: Displayable, outputStream: UnsafeMutablePointer<TextOutputStream>) {
         self.displayable = displayable
         self.outputStreamPointer = outputStream
     }
 
-    func invoke() {
-        self.state = .executing
+    override func performQuery() {
         self.outputStreamPointer.pointee.write("Priting displayable with title: \(self.displayable.title)")
-        self.finish()
     }
 }
 

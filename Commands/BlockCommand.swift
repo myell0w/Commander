@@ -15,16 +15,16 @@ public final class BlockCommand {
     public typealias Block = (Void) -> Void
 
     fileprivate let executionBlock: Block
-    fileprivate let inverseExecutionBlock: Block
+    fileprivate let reverseExecutionBlock: Block
 
     // (from Invokeable) - Swift doesn't allow to move Properties to extensions (yet)
     public var state: State = .ready
 
     // MARK: - Lifecycle
 
-    public init(block: @escaping Block, inverseBlock: @escaping Block) {
+    public init(block: @escaping Block, reverseBlock: @escaping Block) {
         self.executionBlock = block
-        self.inverseExecutionBlock = inverseBlock
+        self.reverseExecutionBlock = reverseBlock
     }
 }
 
@@ -38,9 +38,9 @@ extension BlockCommand: Command {
         self.finish()
     }
 
-    public func inverse() {
+    public func reverse() {
         self.state = .executing
-        self.inverseExecutionBlock()
+        self.reverseExecutionBlock()
         self.state = .ready
     }
 }

@@ -23,7 +23,6 @@
 		9B7990AE1EBB73A6008B9D26 /* Commands.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B7990991EBB73A5008B9D26 /* Commands.framework */; };
 		9B7990AF1EBB73A6008B9D26 /* Commands.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9B7990991EBB73A5008B9D26 /* Commands.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9B7990C01EBB7402008B9D26 /* Dispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B7990B71EBB7402008B9D26 /* Dispatcher.swift */; };
-		9B7990C11EBB7402008B9D26 /* BaseCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B7990B81EBB7402008B9D26 /* BaseCommand.swift */; };
 		9B7990C21EBB7402008B9D26 /* BlockCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B7990B91EBB7402008B9D26 /* BlockCommand.swift */; };
 		9B7990C31EBB7402008B9D26 /* Validator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B7990BA1EBB7402008B9D26 /* Validator.swift */; };
 		9B7990C41EBB7402008B9D26 /* GroupCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B7990BB1EBB7402008B9D26 /* GroupCommand.swift */; };
@@ -104,7 +103,6 @@
 		9B7990A11EBB73A5008B9D26 /* CommandsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CommandsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B7990AA1EBB73A6008B9D26 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9B7990B71EBB7402008B9D26 /* Dispatcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dispatcher.swift; sourceTree = "<group>"; };
-		9B7990B81EBB7402008B9D26 /* BaseCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseCommand.swift; sourceTree = "<group>"; };
 		9B7990B91EBB7402008B9D26 /* BlockCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockCommand.swift; sourceTree = "<group>"; };
 		9B7990BA1EBB7402008B9D26 /* Validator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Validator.swift; sourceTree = "<group>"; };
 		9B7990BB1EBB7402008B9D26 /* GroupCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupCommand.swift; sourceTree = "<group>"; };
@@ -155,7 +153,6 @@
 		9B441E3D1EC4B96100FB6E34 /* Invokeables */ = {
 			isa = PBXGroup;
 			children = (
-				9B7990B81EBB7402008B9D26 /* BaseCommand.swift */,
 				9B7990B91EBB7402008B9D26 /* BlockCommand.swift */,
 				9B7990BF1EBB7402008B9D26 /* Command.swift */,
 				9B7990BB1EBB7402008B9D26 /* GroupCommand.swift */,
@@ -441,7 +438,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9B7990C11EBB7402008B9D26 /* BaseCommand.swift in Sources */,
 				9B7990C21EBB7402008B9D26 /* BlockCommand.swift in Sources */,
 				9B7990C61EBB7402008B9D26 /* InvokeableHandler.swift in Sources */,
 				9B7990C31EBB7402008B9D26 /* Validator.swift in Sources */,

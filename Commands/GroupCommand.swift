@@ -62,7 +62,7 @@ extension GroupCommand: Command {
         self.commands.forEach { $0.invoke() }
     }
 
-    public func inverse() {
-        self.commands.reversed().forEach { $0.inverse() }
+    public func reverse() {
+        self.commands.reversed().forEach { $0.reverse() }
     }
 }

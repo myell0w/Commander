@@ -14,17 +14,17 @@ public final class TargetActionCommand {
 
     fileprivate weak var target: NSObject?
     fileprivate let action: Selector
-    fileprivate let inverseAction: Selector
+    fileprivate let reverseAction: Selector
 
     // (from Invokeable) - Swift doesn't allow to move Properties to extensions (yet)
     public var state: State = .ready
 
     // MARK: - Lifecycle
 
-    public init(target: NSObject, action: Selector, inverseAction: Selector) {
+    public init(target: NSObject, action: Selector, reverseAction: Selector) {
         self.target = target
         self.action = action
-        self.inverseAction = inverseAction
+        self.reverseAction = reverseAction
     }
 }
 
@@ -40,11 +40,11 @@ extension TargetActionCommand: Command {
         self.finish()
     }
 
-    public func inverse() {
+    public func reverse() {
         guard let target = self.target else { return }
 
         self.state = .executing
-        target.perform(self.inverseAction)
+        target.perform(self.reverseAction)
         self.state = .ready
     }
 }

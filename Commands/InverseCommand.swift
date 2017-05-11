@@ -31,11 +31,11 @@ extension InverseCommand: Command {
 
     public func invoke() {
         self.state = .executing
-        self.command.inverse()
+        self.command.reverse()
         self.finish()
     }
 
-    public func inverse() {
+    public func reverse() {
         self.state = .executing
         self.command.invoke()
         self.state = .ready
