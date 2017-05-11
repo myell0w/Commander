@@ -58,10 +58,6 @@ extension GroupCommand: Command {
         return "<\(type(of: self)) state:\(self.state)> {\n" + commandsDescription + "\n}"
     }
 
-    public var isMutating: Bool {
-        return self.commands.lazy.filter({ $0.isMutating }).isEmpty == false
-    }
-
     public func invoke() {
         self.commands.forEach { $0.invoke() }
     }

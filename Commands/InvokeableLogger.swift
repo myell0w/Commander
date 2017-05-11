@@ -9,14 +9,14 @@
 import Foundation
 
 
-/// CommandHandler that logs commands to a TextOutputStream
-public final class CommandLogger {
+/// InvokeableHandler that logs commands to a TextOutputStream
+public final class InvokeableLogger {
 
     fileprivate let outputStreamPointer: UnsafeMutablePointer<TextOutputStream>?
 
     // MARK: - Properties
 
-    // (from CommandHandler) - Swift doesn't allow to move Properties to extensions (yet)
+    // (from InvokeableHandler) - Swift doesn't allow to move Properties to extensions (yet)
     public var isEnabled: Bool = true
 
     // MARK: - Lifecycle
@@ -26,12 +26,12 @@ public final class CommandLogger {
     }
 }
 
-// MARK: - CommandHandler
+// MARK: - InvokeableHandler
 
-extension CommandLogger: CommandHandler {
+extension InvokeableLogger: InvokeableHandler {
 
-    public func handleCommand(_ command: Command) {
-        let description = command.description
+    public func handleInvokeable(_ invokeable: Invokeable) {
+        let description = invokeable.description
 
         if let outputStream = self.outputStreamPointer {
             outputStream.pointee.write(description + "\n")

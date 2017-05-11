@@ -28,7 +28,7 @@ public final class CommandUndoManager {
     // MARK: - Properties
 
     public weak var delegate: CommandUndoManagerDelegate?
-    // (from CommandHandler) - Swift doesn't allow to move Properties to extensions (yet)
+    // (from InvokeableHandler) - Swift doesn't allow to move Properties to extensions (yet)
     public var isEnabled: Bool = true
 
     // MARK: - Lifecycle
@@ -75,13 +75,13 @@ public final class CommandUndoManager {
     }
 }
 
-// MARK: - CommandHandler
+// MARK: - InvokeableHandler
 
-extension CommandUndoManager: CommandHandler {
+extension CommandUndoManager: InvokeableHandler {
 
-    public func handleCommand(_ command: Command) {
-        guard command.isMutating else { return }
-
+    public func handleInvokeable(_ invokeable: Invokeable) {
+        guard let command = invokeable as? Command else { return }
+        
         self.commands.append(command)
         self.undoneCommands.removeAll()
     }

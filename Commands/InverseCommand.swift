@@ -15,9 +15,8 @@ public final class InverseCommand {
 
     fileprivate let command: Command
 
-    // (from Command) - Swift doesn't allow to move Properties to extensions (yet)
+    // (from Invokeable) - Swift doesn't allow to move Properties to extensions (yet)
     public var state: State = .ready
-    public var isMutating: Bool { return self.command.isMutating }
 
     // MARK: - Lifecycle
 

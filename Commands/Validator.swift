@@ -10,7 +10,7 @@ import Foundation
 
 
 /// Validates whether a command is allowed to be invoked
-public protocol CommandValidator {
+public protocol Validator {
 
-    func validate(command: Command) -> Bool
+    func validate(invokeable: Invokeable) -> Bool
 }

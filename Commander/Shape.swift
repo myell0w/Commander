@@ -51,7 +51,7 @@ final class MoveCommand: BaseCommand {
     init(moveable: Moveable, offset: CGVector) {
         self.moveable = moveable
         self.offset = offset
-        super.init(isMutating: true)
+        super.init()
     }
 
     convenience init(moveable: Moveable, target: CGPoint) {
@@ -75,7 +75,7 @@ final class UpdateTitleCommand: BaseCommand {
     init(displayable: Displayable, title: String) {
         self.displayable = displayable
         self.title = title
-        super.init(isMutating: true)
+        super.init()
     }
 
     override func makeCommand() -> Command {
@@ -92,7 +92,7 @@ final class CollissionDetectionCommand: BaseCommand {
 
     init(moveables: [Moveable]) {
         self.moveables = moveables
-        super.init(isMutating: true)
+        super.init()
     }
 
     override func makeCommand() -> Command {
@@ -130,7 +130,7 @@ final class LayoutCommand: BaseCommand {
     init(moveables: [Moveable], target: CGPoint) {
         self.moveables = moveables
         self.target = target
-        super.init(isMutating: true)
+        super.init()
     }
 
     override func makeCommand() -> Command {
@@ -144,20 +144,21 @@ final class LayoutCommand: BaseCommand {
     }
 }
 
-final class DisplayCommand: BaseCommand {
+final class DisplayCommand: Query {
 
     private let displayable: Displayable
     private let outputStreamPointer: UnsafeMutablePointer<TextOutputStream>
+    var state: State = .ready
 
     init(displayable: Displayable, outputStream: UnsafeMutablePointer<TextOutputStream>) {
         self.displayable = displayable
         self.outputStreamPointer = outputStream
-        super.init(isMutating: false)
     }
 
-    override func makeCommand() -> Command {
-        return BlockCommand(block: { self.outputStreamPointer.pointee.write("Priting displayable with title: \(self.displayable.title)") },
-                            inverseBlock: { } )
+    func invoke() {
+        self.state = .executing
+        self.outputStreamPointer.pointee.write("Priting displayable with title: \(self.displayable.title)")
+        self.finish()
     }
 }
 
@@ -192,7 +193,7 @@ final class AppMode: AppDecision {
 
 }
 
-final class AppValidator: CommandValidator {
+final class AppValidator: Validator {
 
     let appMode: AppDecision
 
@@ -202,12 +203,10 @@ final class AppValidator: CommandValidator {
         self.appMode = appMode
     }
 
-    // MARK: - CommandValidator
+    // MARK: - Validator
     
-    func validate(command: Command) -> Bool {
-        if !command.isMutating {
-            return true
-        }
+    func validate(invokeable: Invokeable) -> Bool {
+        guard invokeable is Command else { return true }
         
         return self.appMode.canEdit()
     }

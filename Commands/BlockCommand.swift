@@ -17,16 +17,14 @@ public final class BlockCommand {
     fileprivate let executionBlock: Block
     fileprivate let inverseExecutionBlock: Block
 
-    // (from Command) - Swift doesn't allow to move Properties to extensions (yet)
-    public let isMutating: Bool
+    // (from Invokeable) - Swift doesn't allow to move Properties to extensions (yet)
     public var state: State = .ready
 
     // MARK: - Lifecycle
 
-    public init(block: @escaping Block, inverseBlock: @escaping Block, isMutating: Bool = true) {
+    public init(block: @escaping Block, inverseBlock: @escaping Block) {
         self.executionBlock = block
         self.inverseExecutionBlock = inverseBlock
-        self.isMutating = isMutating
     }
 }
 

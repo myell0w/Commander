@@ -14,14 +14,13 @@ open class BaseCommand {
 
     public lazy var command: Command = self.makeCommand()
 
-    // (from Command) - Swift doesn't allow to move Properties to extensions (yet)
+    // (from Invokeable) - Swift doesn't allow to move Properties to extensions (yet)
     public var state: State = .ready
-    public let isMutating: Bool
 
     // MARK: - Lifecycle
 
-    public init(isMutating: Bool = true) {
-        self.isMutating = isMutating
+    public init() {
+        // just to make available
     }
 
     // MARK: - BaseCommand

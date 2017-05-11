@@ -9,13 +9,13 @@
 import Foundation
 
 
-/// A CommandHandler that simply stores a reference to all handled Commands
+/// A InvokeableHandler that simply stores a reference to all handled Commands
 public final class CommandStore {
 
     // MARK: - Properties
 
     public fileprivate(set) var commands: [Command] = []
-    // (from CommandHandler) - Swift doesn't allow to move Properties to extensions (yet)
+    // (from InvokeableHandler) - Swift doesn't allow to move Properties to extensions (yet)
     public var isEnabled: Bool = true
 
     // MARK: - Lifecycle
@@ -31,18 +31,20 @@ public final class CommandStore {
     }
 }
 
-// MARK: - CommandHandler
+// MARK: - InvokeableHandler
 
-extension CommandStore: CommandHandler {
+extension CommandStore: InvokeableHandler {
 
-    public func handleCommand(_ command: Command) {
+    public func handleInvokeable(_ invokeable: Invokeable) {
+        guard let command = invokeable as? Command else { return }
+
         self.commands.append(command)
     }
 }
 
-// MARK: - CommandDispatcher
+// MARK: - Dispatcher
 
-extension CommandDispatcher {
+extension Dispatcher {
 
     public func applyStore(_ store: CommandStore, asTransaction: Bool = false) {
         if asTransaction {

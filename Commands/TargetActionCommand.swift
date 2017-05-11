@@ -16,17 +16,15 @@ public final class TargetActionCommand {
     fileprivate let action: Selector
     fileprivate let inverseAction: Selector
 
-    // (from Command) - Swift doesn't allow to move Properties to extensions (yet)
-    public let isMutating: Bool
+    // (from Invokeable) - Swift doesn't allow to move Properties to extensions (yet)
     public var state: State = .ready
 
     // MARK: - Lifecycle
 
-    public init(target: NSObject, action: Selector, inverseAction: Selector, isMutating: Bool = true) {
+    public init(target: NSObject, action: Selector, inverseAction: Selector) {
         self.target = target
         self.action = action
         self.inverseAction = inverseAction
-        self.isMutating = isMutating
     }
 }
 

@@ -22,7 +22,7 @@ public final class ProduceCommand: BaseCommand {
 
     public init(producer: @escaping Producer) {
         self.producer = producer
-        super.init(isMutating: true)
+        super.init()
     }
 
     // MARK: - BaseCommand

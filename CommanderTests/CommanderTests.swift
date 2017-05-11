@@ -15,7 +15,7 @@ class CommanderTests: XCTestCase {
     
     func testBasics() {
         let undoManager = CommandUndoManager()
-        let commander = CommandDispatcher(validator: AppValidator(appMode: AppMode(mode: .full)))
+        let commander = Dispatcher(validator: AppValidator(appMode: AppMode(mode: .full)))
         commander.handlers.append(undoManager)
 
         let shape = Shape()
@@ -95,7 +95,7 @@ class CommanderTests: XCTestCase {
 
     func testLayout() {
         let undoManager = CommandUndoManager()
-        let commander = CommandDispatcher(validator: AppValidator(appMode: AppMode(mode: .full)))
+        let commander = Dispatcher(validator: AppValidator(appMode: AppMode(mode: .full)))
         commander.handlers.append(undoManager)
 
         let shapes = [Shape(), Shape(), Shape(), Shape(), Shape(), Shape(), Shape(), Shape(), Shape(), Shape()]
@@ -124,7 +124,7 @@ class CommanderTests: XCTestCase {
     }
 
     func testValidation() {
-        let commander = CommandDispatcher(validator: AppValidator(appMode: AppMode(mode: .readOnly)))
+        let commander = Dispatcher(validator: AppValidator(appMode: AppMode(mode: .readOnly)))
 
         let shape = Shape()
         shape.title = "Original Title"
