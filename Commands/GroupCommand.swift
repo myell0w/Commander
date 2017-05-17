@@ -14,9 +14,13 @@ public final class GroupCommand {
 
     fileprivate let commands: [Command]
 
+    // (from Invokeable) - Swift doesn't allow to move Properties to extensions (yet)
+    public var uuid: Identifier
+
     // MARK: - Lifecycle
 
-    public init(commands: [Command]) {
+    public init(uuid: Identifier = UUID(), commands: [Command]) {
+        self.uuid = uuid
         self.commands = commands
     }
 }

@@ -44,6 +44,8 @@ public final class Dispatcher {
     }
 
     public func invoke(_ invokeable: Invokeable) {
+        assert(Thread.isMainThread, "`invoke` must be called on the main thread")
+
         guard self.isInTransaction == false else {
             assert(invokeable is Command, "Transactions are only supported for Commands")
             self.transactionStore.handleInvokeable(invokeable)
@@ -77,6 +79,8 @@ public final class Dispatcher {
 extension Dispatcher {
 
     public func withTransaction(_ work: () -> Void) {
+        assert(Thread.isMainThread, "`withTransaction` must be called on the main thread")
+
         guard self.isInTransaction == false else {
             assertionFailure("Trying to group while already grouping")
             return
@@ -103,9 +107,5 @@ extension Dispatcher {
 
         handlers.forEach { $0.isEnabled = false }
         self.withTransaction(work)
-    }
-
-    public func invokeProduced(_ producer: @autoclosure @escaping (Void) -> Command) {
-        self.invoke(ProduceCommand(producer: producer))
     }
 }

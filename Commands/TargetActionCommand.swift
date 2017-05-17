@@ -18,10 +18,12 @@ public final class TargetActionCommand {
 
     // (from Invokeable) - Swift doesn't allow to move Properties to extensions (yet)
     public var state: State = .ready
+    public var uuid: Identifier
 
     // MARK: - Lifecycle
 
-    public init(target: NSObject, action: Selector, reverseAction: Selector) {
+    public init(uuid: Identifier = UUID(), target: NSObject, action: Selector, reverseAction: Selector) {
+        self.uuid = uuid
         self.target = target
         self.action = action
         self.reverseAction = reverseAction

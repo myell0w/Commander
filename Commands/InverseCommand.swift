@@ -17,10 +17,12 @@ public final class InverseCommand {
 
     // (from Invokeable) - Swift doesn't allow to move Properties to extensions (yet)
     public var state: State = .ready
+    public var uuid: Identifier
 
     // MARK: - Lifecycle
 
-    public init(command: Command) {
+    public init(uuid: Identifier = UUID(), command: Command) {
+        self.uuid = uuid
         self.command = command
     }
 }

@@ -18,11 +18,12 @@ open class BaseQuery {
 
     // (from Invokeable) - Swift doesn't allow to move Properties to extensions (yet)
     public var state: State = .ready
+    public var uuid: Identifier
 
     // MARK: - Lifecycle
 
-    public init() {
-        // just to make available
+    public init(uuid: Identifier = UUID()) {
+        self.uuid = uuid
     }
 
     // MARK: - BaseQuery

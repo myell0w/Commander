@@ -42,7 +42,9 @@ extension State: Hashable, Equatable {
 /// Invokeables can be invoked by a Dispatcher and can be either Querys or Commands
 public protocol Invokeable: class, CustomStringConvertible {
 
-    // TODO: var uuid: UUID
+    typealias Identifier = UUID
+
+    var uuid: Identifier { get }
     var state: State { get set }
     var timestamp: Date? { get }
 
