@@ -105,7 +105,7 @@ extension Dispatcher {
         self.withTransaction(work)
     }
 
-    public func invokeProduced(_ producer: @autoclosure @escaping (Void) -> Command) {
+    public func invokeProduced(_ producer: @autoclosure @escaping () -> Command) {
         self.invoke(ProduceCommand(producer: producer))
     }
 }
