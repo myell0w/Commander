@@ -12,7 +12,7 @@ import Foundation
 /// A command that can execute a block
 public final class BlockCommand {
 
-    public typealias Block = (Void) -> Void
+    public typealias Block = () -> Void
 
     fileprivate let executionBlock: Block
     fileprivate let reverseExecutionBlock: Block

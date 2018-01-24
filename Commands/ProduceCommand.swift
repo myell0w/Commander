@@ -14,7 +14,7 @@ import Foundation
 /// Results of Command `A`, but you still want to group them together into { A, B }
 public final class ProduceCommand: BaseCommand {
 
-    public typealias Producer = (Void) -> Command
+    public typealias Producer = () -> Command
 
     private let producer: Producer
 

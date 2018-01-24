@@ -103,8 +103,9 @@ final class CollissionDetectionCommand: BaseCommand {
                 // simulate asynchronous execution
                 let deadlineTime = DispatchTime.now() + .milliseconds(500)
                 DispatchQueue.global().asyncAfter(deadline: deadlineTime) {
-                    let moveCommands = zip(self.moveables.indices, self.moveables).map { index, moveable in
-                        return MoveCommand(moveable: moveable, offset: CGVector(dx: index * 100, dy: 0))
+					let moveCommands = zip(self.moveables.indices, self.moveables).map { arg -> MoveCommand in
+						let (index, moveable) = arg
+						return MoveCommand(moveable: moveable, offset: CGVector(dx: index * 100, dy: 0))
                     }
 
                     let groupCommand = GroupCommand(commands: moveCommands)
@@ -135,7 +136,8 @@ final class LayoutCommand: BaseCommand {
 
     override func makeCommand() -> Command {
         // Layout = Move objects + Collission Detection
-        let moveCommands = zip(self.moveables.indices, self.moveables).map { index, moveable -> MoveCommand in
+        let moveCommands = zip(self.moveables.indices, self.moveables).map { arg -> MoveCommand in
+            let (index, moveable) = arg
             let y = self.target.y + CGFloat(index) * 10.0
             return MoveCommand(moveable: moveable, target: CGPoint(x: self.target.x, y: y))
         }
