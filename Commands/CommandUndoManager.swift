@@ -8,6 +8,7 @@
 
 import Foundation
 
+
 public protocol CommandUndoManagerDelegate: class {
 
     func commandUndoManager(_ undoManager: CommandUndoManager, didUndoCommand command: Command)
@@ -15,6 +16,7 @@ public protocol CommandUndoManagerDelegate: class {
 }
 
 
+/// An InvokableHandler that maintains a undo/redo queue
 public final class CommandUndoManager {
 
     public enum Error: Swift.Error {

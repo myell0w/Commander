@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		9B441E2A1EC1F7CF00FB6E34 /* CommandStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B441E291EC1F7CF00FB6E34 /* CommandStore.swift */; };
 		9B441E381EC4AC4400FB6E34 /* ProduceCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B441E371EC4AC4400FB6E34 /* ProduceCommand.swift */; };
-		9B441E3A1EC4B92A00FB6E34 /* Query.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B441E391EC4B92A00FB6E34 /* Query.swift */; };
 		9B441E3C1EC4B95200FB6E34 /* Invokeable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B441E3B1EC4B95200FB6E34 /* Invokeable.swift */; };
 		9B79905C1EBA2555008B9D26 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B79905B1EBA2555008B9D26 /* AppDelegate.swift */; };
 		9B79905E1EBA2555008B9D26 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B79905D1EBA2555008B9D26 /* ViewController.swift */; };
@@ -17,7 +16,6 @@
 		9B7990631EBA2555008B9D26 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9B7990621EBA2555008B9D26 /* Assets.xcassets */; };
 		9B7990661EBA2555008B9D26 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9B7990641EBA2555008B9D26 /* LaunchScreen.storyboard */; };
 		9B7990711EBA2555008B9D26 /* CommanderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B7990701EBA2555008B9D26 /* CommanderTests.swift */; };
-		9B7990931EBA2682008B9D26 /* Dictionary+Tuples.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B7990921EBA2682008B9D26 /* Dictionary+Tuples.swift */; };
 		9B7990A21EBB73A6008B9D26 /* Commands.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B7990991EBB73A5008B9D26 /* Commands.framework */; };
 		9B7990AB1EBB73A6008B9D26 /* Commands.h in Headers */ = {isa = PBXBuildFile; fileRef = 9B79909B1EBB73A5008B9D26 /* Commands.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9B7990AE1EBB73A6008B9D26 /* Commands.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B7990991EBB73A5008B9D26 /* Commands.framework */; };
@@ -84,7 +82,6 @@
 /* Begin PBXFileReference section */
 		9B441E291EC1F7CF00FB6E34 /* CommandStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommandStore.swift; sourceTree = "<group>"; };
 		9B441E371EC4AC4400FB6E34 /* ProduceCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProduceCommand.swift; sourceTree = "<group>"; };
-		9B441E391EC4B92A00FB6E34 /* Query.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Query.swift; sourceTree = "<group>"; };
 		9B441E3B1EC4B95200FB6E34 /* Invokeable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Invokeable.swift; sourceTree = "<group>"; };
 		9B7990581EBA2555008B9D26 /* Commander.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Commander.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B79905B1EBA2555008B9D26 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -96,7 +93,6 @@
 		9B79906C1EBA2555008B9D26 /* CommanderTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CommanderTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B7990701EBA2555008B9D26 /* CommanderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommanderTests.swift; sourceTree = "<group>"; };
 		9B7990721EBA2555008B9D26 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		9B7990921EBA2682008B9D26 /* Dictionary+Tuples.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+Tuples.swift"; sourceTree = "<group>"; };
 		9B7990991EBB73A5008B9D26 /* Commands.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Commands.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B79909B1EBB73A5008B9D26 /* Commands.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Commands.h; sourceTree = "<group>"; };
 		9B79909C1EBB73A5008B9D26 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -159,7 +155,6 @@
 				9BB6C0821EBE7F3700FFFC76 /* InverseCommand.swift */,
 				9B441E3B1EC4B95200FB6E34 /* Invokeable.swift */,
 				9B441E371EC4AC4400FB6E34 /* ProduceCommand.swift */,
-				9B441E391EC4B92A00FB6E34 /* Query.swift */,
 				9B7990D91EBCC575008B9D26 /* TargetActionCommand.swift */,
 			);
 			name = Invokeables;
@@ -192,7 +187,6 @@
 			children = (
 				9B7990C91EBB7488008B9D26 /* Shape.swift */,
 				9B79905B1EBA2555008B9D26 /* AppDelegate.swift */,
-				9B7990921EBA2682008B9D26 /* Dictionary+Tuples.swift */,
 				9B79905D1EBA2555008B9D26 /* ViewController.swift */,
 				9B79905F1EBA2555008B9D26 /* Main.storyboard */,
 				9B7990621EBA2555008B9D26 /* Assets.xcassets */,
@@ -423,7 +417,6 @@
 			files = (
 				9B79905E1EBA2555008B9D26 /* ViewController.swift in Sources */,
 				9B79905C1EBA2555008B9D26 /* AppDelegate.swift in Sources */,
-				9B7990931EBA2682008B9D26 /* Dictionary+Tuples.swift in Sources */,
 				9B7990CA1EBB7488008B9D26 /* Shape.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -449,7 +442,6 @@
 				9B7990D81EBCC008008B9D26 /* InvokeableLogger.swift in Sources */,
 				9B7990C81EBB7402008B9D26 /* Command.swift in Sources */,
 				9B7990C01EBB7402008B9D26 /* Dispatcher.swift in Sources */,
-				9B441E3A1EC4B92A00FB6E34 /* Query.swift in Sources */,
 				9B441E3C1EC4B95200FB6E34 /* Invokeable.swift in Sources */,
 				9B441E2A1EC1F7CF00FB6E34 /* CommandStore.swift in Sources */,
 				9B7990D61EBCBE51008B9D26 /* Invoker.swift in Sources */,

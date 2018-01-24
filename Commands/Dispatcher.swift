@@ -52,13 +52,7 @@ public final class Dispatcher {
             return
         }
 
-        guard invokeable.state == .ready else {
-            assertionFailure("Trying to invoke a Command that is not ready")
-            return
-        }
-
         guard self.canInvoke(invokeable) else {
-            invokeable.state = .forbidden
             self.delegate?.dispatcher(self, didForbidInvokeable: invokeable)
             return
         }

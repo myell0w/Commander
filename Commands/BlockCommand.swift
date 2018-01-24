@@ -17,14 +17,9 @@ public final class BlockCommand {
     private let executionBlock: Block
     private let reverseExecutionBlock: Block
 
-    // (from Invokeable) - Swift doesn't allow to move Properties to extensions (yet)
-    public var state: State = .ready
-    public var uuid: Identifier
-
     // MARK: - Lifecycle
 
-    public init(uuid: Identifier = UUID(), block: @escaping Block, reverseBlock: @escaping Block) {
-        self.uuid = uuid
+    public init(block: @escaping Block, reverseBlock: @escaping Block) {
         self.executionBlock = block
         self.reverseExecutionBlock = reverseBlock
     }
@@ -35,14 +30,10 @@ public final class BlockCommand {
 extension BlockCommand: Command {
 
     public func invoke() {
-        self.state = .executing
         self.executionBlock()
-        self.finish()
     }
 
     public func reverse() {
-        self.state = .executing
         self.reverseExecutionBlock()
-        self.state = .ready
     }
 }

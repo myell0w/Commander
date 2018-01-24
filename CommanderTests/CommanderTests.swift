@@ -133,12 +133,10 @@ class CommanderTests: XCTestCase {
         XCTAssertTrue(shape.title == "Original Title", "Verifiying initial title of shape")
         commander.invoke(updateCommand)
         XCTAssertTrue(shape.title == "Original Title", "Verifiying title of shape after forbidden command")
-        XCTAssertTrue(updateCommand.state == .forbidden, "Verifiying state of forbidden command")
         
         var output: TextOutputStream = ""
         let displayCommand = DisplayCommand(displayable: shape, outputStream: &output)
         commander.invoke(displayCommand)
-        XCTAssertTrue(displayCommand.state == .finished(timestamp: Date()), "Verifiying state of display command")
         XCTAssertTrue((output as! String) == "Priting displayable with title: Original Title", "Verifiying output of display command")
     }
 }

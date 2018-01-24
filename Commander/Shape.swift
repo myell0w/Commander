@@ -13,7 +13,7 @@ import Commands
 
 // MARK: - Model
 
-protocol Moveable: class {
+protocol Moveable: AnyObject {
 
     var uuid: UUID { get }
     var center: CGPoint { get set }
@@ -21,7 +21,7 @@ protocol Moveable: class {
     func move(by offset: CGVector)
 }
 
-protocol Displayable: class {
+protocol Displayable: AnyObject {
 
     var title: String { get set }
 }
@@ -43,15 +43,15 @@ final class Shape: Moveable, Displayable, CustomStringConvertible {
 
 // MARK: - Commands
 
-final class MoveCommand: BaseCommand {
+final class MoveCommand: Command {
 
     private let moveable: Moveable
     private let offset: CGVector
+    private var inverseOffset: CGVector { return CGVector(dx: -self.offset.dx, dy: -self.offset.dy) }
 
     init(moveable: Moveable, offset: CGVector) {
         self.moveable = moveable
         self.offset = offset
-        super.init()
     }
 
     convenience init(moveable: Moveable, target: CGPoint) {
@@ -59,26 +59,35 @@ final class MoveCommand: BaseCommand {
         self.init(moveable: moveable, offset: offset)
     }
 
-    override func makeCommand() -> Command {
-        let inverseOffset = CGVector(dx: -self.offset.dx, dy: -self.offset.dy)
+    func invoke() {
+        self.moveable.move(by: self.offset)
+    }
 
-        return BlockCommand(block: { self.moveable.move(by: self.offset) },
-                            reverseBlock: { self.moveable.move(by: inverseOffset) })
+    func reverse() {
+        self.moveable.move(by: self.inverseOffset)
     }
 }
 
-final class UpdateTitleCommand: BaseCommand {
+final class UpdateTitleCommand: Command {
 
     private let displayable: Displayable
     private let title: String
+    private lazy var command: Command = self.makeCommand()
 
     init(displayable: Displayable, title: String) {
         self.displayable = displayable
         self.title = title
-        super.init()
     }
 
-    override func makeCommand() -> Command {
+    func invoke() {
+        self.command.invoke()
+    }
+
+    func reverse() {
+        self.command.reverse()
+    }
+
+    private func makeCommand() -> Command {
         let currentTitle = self.displayable.title
 
         return BlockCommand(block: { self.displayable.title = self.title },
@@ -86,17 +95,25 @@ final class UpdateTitleCommand: BaseCommand {
     }
 }
 
-final class CollissionDetectionCommand: BaseCommand {
+final class CollissionDetectionCommand: Command {
 
     private let moveables: [Moveable]
+    private lazy var command: Command = self.makeCommand()
 
     init(moveables: [Moveable]) {
         self.moveables = moveables
-        super.init()
     }
 
-    override func makeCommand() -> Command {
-        let originalCenterPoints = Dictionary(tuples: self.moveables.map { ($0.uuid, $0.center) })
+    func invoke() {
+        self.command.invoke()
+    }
+
+    func reverse() {
+        self.command.reverse()
+    }
+
+    private func makeCommand() -> Command {
+        let originalCenterPoints = Dictionary(uniqueKeysWithValues: self.moveables.map { ($0.uuid, $0.center) })
 
         return BlockCommand(
             block: {
@@ -113,28 +130,33 @@ final class CollissionDetectionCommand: BaseCommand {
                 }
         },
             reverseBlock: {
-                let moveCommands = self.moveables.map {
-                    return MoveCommand(moveable: $0, target: originalCenterPoints[$0.uuid]!)
-                }
-
+                let moveCommands = self.moveables.map { MoveCommand(moveable: $0, target: originalCenterPoints[$0.uuid]!) }
                 let groupCommand = GroupCommand(commands: moveCommands)
                 groupCommand.invoke()
         })
     }
 }
 
-final class LayoutCommand: BaseCommand {
+final class LayoutCommand: Command {
 
     private let moveables: [Moveable]
     private let target: CGPoint
+    private lazy var command: Command = self.makeCommand()
 
     init(moveables: [Moveable], target: CGPoint) {
         self.moveables = moveables
         self.target = target
-        super.init()
     }
 
-    override func makeCommand() -> Command {
+    func invoke() {
+        self.command.invoke()
+    }
+
+    func reverse() {
+        self.command.reverse()
+    }
+
+    func makeCommand() -> Command {
         // Layout = Move objects + Collission Detection
         let moveCommands = zip(self.moveables.indices, self.moveables).map { arg -> MoveCommand in
             let (index, moveable) = arg
@@ -146,7 +168,7 @@ final class LayoutCommand: BaseCommand {
     }
 }
 
-final class DisplayCommand: BaseQuery {
+final class DisplayCommand: Invokeable {
 
     private let displayable: Displayable
     private let outputStreamPointer: UnsafeMutablePointer<TextOutputStream>
@@ -156,7 +178,7 @@ final class DisplayCommand: BaseQuery {
         self.outputStreamPointer = outputStream
     }
 
-    override func performQuery() {
+    func invoke() {
         self.outputStreamPointer.pointee.write("Priting displayable with title: \(self.displayable.title)")
     }
 }

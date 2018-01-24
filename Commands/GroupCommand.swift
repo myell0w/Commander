@@ -14,13 +14,9 @@ public final class GroupCommand {
 
     private let commands: [Command]
 
-    // (from Invokeable) - Swift doesn't allow to move Properties to extensions (yet)
-    public var uuid: Identifier
-
     // MARK: - Lifecycle
 
-    public init(uuid: Identifier = UUID(), commands: [Command]) {
-        self.uuid = uuid
+    public init(commands: [Command]) {
         self.commands = commands
     }
 }
@@ -29,37 +25,12 @@ public final class GroupCommand {
 
 extension GroupCommand: Command {
 
-    public var state: State {
-        get {
-            let states = self.commands.map { $0.state }
-            let stateSet = Set(states)
-
-            // no commands?
-            guard stateSet.isEmpty == false else { return .ready }
-            // all have same state
-            guard stateSet.count > 1 else { return states[0] }
-
-            // TODO: How to handle this correctly?
-            if stateSet.contains(.executing) {
-                return .executing
-            } else if stateSet.contains(.forbidden) {
-                return .forbidden
-            }
-
-            return .ready
-        }
-
-        set {
-            // do nothing
-        }
-    }
-
     public var description: String {
         var commandsDescription = self.commands.reduce("") { $0 + "  " + $1.description + "\n" }
         let lastIndex = commandsDescription.index(before: commandsDescription.endIndex)
         commandsDescription = String(commandsDescription[..<lastIndex])
 
-        return "<\(type(of: self)) state:\(self.state)> {\n" + commandsDescription + "\n}"
+        return "<\(type(of: self))> {\n" + commandsDescription + "\n}"
     }
 
     public func invoke() {
