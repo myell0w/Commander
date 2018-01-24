@@ -68,30 +68,15 @@ final class MoveCommand: Command {
     }
 }
 
-final class UpdateTitleCommand: Command {
-
-    private let displayable: Displayable
-    private let title: String
-    private lazy var command: Command = self.makeCommand()
+final class UpdateTitleCommand: ProduceCommand {
 
     init(displayable: Displayable, title: String) {
-        self.displayable = displayable
-        self.title = title
-    }
+        super.init { () -> Command in
+            let currentTitle = displayable.title
 
-    func invoke() {
-        self.command.invoke()
-    }
-
-    func reverse() {
-        self.command.reverse()
-    }
-
-    private func makeCommand() -> Command {
-        let currentTitle = self.displayable.title
-
-        return BlockCommand(block: { self.displayable.title = self.title },
-                            reverseBlock: { self.displayable.title = currentTitle })
+            return BlockCommand(block: { displayable.title = title },
+                                reverseBlock: { displayable.title = currentTitle })
+        }
     }
 }
 
@@ -137,34 +122,20 @@ final class CollissionDetectionCommand: Command {
     }
 }
 
-final class LayoutCommand: Command {
-
-    private let moveables: [Moveable]
-    private let target: CGPoint
-    private lazy var command: Command = self.makeCommand()
+final class LayoutCommand: ProduceCommand {
 
     init(moveables: [Moveable], target: CGPoint) {
-        self.moveables = moveables
-        self.target = target
-    }
+        super.init { () -> Command in
+            // Layout = Move objects + Collission Detection
+            let moveCommands = zip(moveables.indices, moveables).map { arg -> MoveCommand in
+                let (index, moveable) = arg
+                let y = target.y + CGFloat(index) * 10.0
+                return MoveCommand(moveable: moveable, target: CGPoint(x: target.x, y: y))
+            }
 
-    func invoke() {
-        self.command.invoke()
-    }
-
-    func reverse() {
-        self.command.reverse()
-    }
-
-    func makeCommand() -> Command {
-        // Layout = Move objects + Collission Detection
-        let moveCommands = zip(self.moveables.indices, self.moveables).map { arg -> MoveCommand in
-            let (index, moveable) = arg
-            let y = self.target.y + CGFloat(index) * 10.0
-            return MoveCommand(moveable: moveable, target: CGPoint(x: self.target.x, y: y))
+            return GroupCommand(commands: moveCommands + [CollissionDetectionCommand(moveables: moveables)])
         }
 
-        return GroupCommand(commands: moveCommands + [CollissionDetectionCommand(moveables: moveables)])
     }
 }
 
