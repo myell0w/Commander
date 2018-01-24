@@ -12,7 +12,7 @@ import Foundation
 /// A command that groups other commands
 public final class GroupCommand {
 
-    fileprivate let commands: [Command]
+    private let commands: [Command]
 
     // (from Invokeable) - Swift doesn't allow to move Properties to extensions (yet)
     public var uuid: Identifier
@@ -57,7 +57,7 @@ extension GroupCommand: Command {
     public var description: String {
         var commandsDescription = self.commands.reduce("") { $0 + "  " + $1.description + "\n" }
         let lastIndex = commandsDescription.index(before: commandsDescription.endIndex)
-        commandsDescription = commandsDescription.substring(to: lastIndex)
+        commandsDescription = String(commandsDescription[..<lastIndex])
 
         return "<\(type(of: self)) state:\(self.state)> {\n" + commandsDescription + "\n}"
     }

@@ -28,7 +28,7 @@ protocol Displayable: class {
 
 final class Shape: Moveable, Displayable, CustomStringConvertible {
 
-    private(set) public var uuid = UUID
+    private(set) public var uuid = UUID()
     var center: CGPoint = .zero
     var title: String = ""
 

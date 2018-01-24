@@ -22,8 +22,8 @@ public final class CommandUndoManager {
         case redo
     }
 
-    fileprivate(set) var commands: [Command] = []
-    fileprivate(set) var undoneCommands: [Command] = []
+    private(set) var commands: [Command] = []
+    private(set) var undoneCommands: [Command] = []
 
     // MARK: - Properties
 

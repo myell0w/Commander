@@ -14,8 +14,8 @@ public final class BlockCommand {
 
     public typealias Block = () -> Void
 
-    fileprivate let executionBlock: Block
-    fileprivate let reverseExecutionBlock: Block
+    private let executionBlock: Block
+    private let reverseExecutionBlock: Block
 
     // (from Invokeable) - Swift doesn't allow to move Properties to extensions (yet)
     public var state: State = .ready

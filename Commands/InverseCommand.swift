@@ -13,7 +13,7 @@ import Foundation
 
 public final class InverseCommand {
 
-    fileprivate let command: Command
+    private let command: Command
 
     // (from Invokeable) - Swift doesn't allow to move Properties to extensions (yet)
     public var state: State = .ready

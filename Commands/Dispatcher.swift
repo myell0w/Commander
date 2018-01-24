@@ -20,9 +20,9 @@ public protocol DispatcherDelegate: class {
 /// Controller class to invoke/dispatch commands
 public final class Dispatcher {
 
-    fileprivate let validator: Validator?
-    fileprivate var isInTransaction: Bool = false
-    fileprivate var transactionStore: CommandStore = CommandStore()
+    private let validator: Validator?
+    private var isInTransaction: Bool = false
+    private var transactionStore: CommandStore = CommandStore()
     
     // MARK: - Properties
 

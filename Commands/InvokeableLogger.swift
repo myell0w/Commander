@@ -12,7 +12,7 @@ import Foundation
 /// InvokeableHandler that logs commands to a TextOutputStream
 public final class InvokeableLogger {
 
-    fileprivate let outputStreamPointer: UnsafeMutablePointer<TextOutputStream>?
+    private let outputStreamPointer: UnsafeMutablePointer<TextOutputStream>?
 
     // MARK: - Properties
 

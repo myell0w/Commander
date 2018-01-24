@@ -14,7 +14,7 @@ public final class CommandStore {
 
     // MARK: - Properties
 
-    public fileprivate(set) var commands: [Command] = []
+    public private(set) var commands: [Command] = []
     // (from InvokeableHandler) - Swift doesn't allow to move Properties to extensions (yet)
     public var isEnabled: Bool = true
 

@@ -71,7 +71,7 @@ public extension Invokeable {
             return description + "\(label): \(value), "
         }
         let lastIndex = fieldDescription.index(fieldDescription.endIndex, offsetBy: -2)
-        fieldDescription = fieldDescription.substring(to: lastIndex)
+        fieldDescription = String(fieldDescription[..<lastIndex])
 
         return "<\(type(of: self)) state: \(self.state)> { \(fieldDescription) }"
     }

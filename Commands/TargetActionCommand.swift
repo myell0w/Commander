@@ -12,9 +12,9 @@ import Foundation
 /// A command that uses the target/action pattern
 public final class TargetActionCommand {
 
-    fileprivate weak var target: NSObject?
-    fileprivate let action: Selector
-    fileprivate let reverseAction: Selector
+    private weak var target: NSObject?
+    private let action: Selector
+    private let reverseAction: Selector
 
     // (from Invokeable) - Swift doesn't allow to move Properties to extensions (yet)
     public var state: State = .ready
