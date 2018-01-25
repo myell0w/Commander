@@ -9,10 +9,12 @@
 import Foundation
 
 
+public protocol InvocationContext { }
+
 /// Invokeables can be invoked by a Dispatcher
 public protocol Invokeable: AnyObject, CustomStringConvertible {
 
-    func invoke()
+    func invoke(context: InvocationContext?)
 }
 
 // MARK: - CustomStringConvertible

@@ -29,11 +29,11 @@ public final class BlockCommand {
 
 extension BlockCommand: Command {
 
-    public func invoke() {
+    public func invoke(context: InvocationContext? = nil) {
         self.executionBlock()
     }
 
-    public func reverse() {
+    public func reverse(context: InvocationContext? = nil) {
         self.reverseExecutionBlock()
     }
 }

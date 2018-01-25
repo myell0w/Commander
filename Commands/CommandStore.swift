@@ -35,7 +35,7 @@ public final class CommandStore {
 
 extension CommandStore: InvokeableHandler {
 
-    public func handleInvokeable(_ invokeable: Invokeable) {
+    public func handleInvokeable(_ invokeable: Invokeable, context: InvocationContext?) {
         guard let command = invokeable as? Command else { return }
 
         self.commands.append(command)
