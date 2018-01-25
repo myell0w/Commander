@@ -59,11 +59,11 @@ final class MoveCommand: Command {
         self.init(moveable: moveable, offset: offset)
     }
 
-    func invoke() {
+    func invoke(context: InvocationContext? = nil) {
         self.moveable.move(by: self.offset)
     }
 
-    func reverse() {
+    func reverse(context: InvocationContext? = nil) {
         self.moveable.move(by: self.inverseOffset)
     }
 }
@@ -89,12 +89,12 @@ final class CollissionDetectionCommand: Command {
         self.moveables = moveables
     }
 
-    func invoke() {
-        self.command.invoke()
+    func invoke(context: InvocationContext? = nil) {
+        self.command.invoke(context: context)
     }
 
-    func reverse() {
-        self.command.reverse()
+    func reverse(context: InvocationContext? = nil) {
+        self.command.reverse(context: context)
     }
 
     private func makeCommand() -> Command {
@@ -149,7 +149,7 @@ final class DisplayCommand: Invokeable {
         self.outputStreamPointer = outputStream
     }
 
-    func invoke() {
+    func invoke(context: InvocationContext? = nil) {
         self.outputStreamPointer.pointee.write("Priting displayable with title: \(self.displayable.title)")
     }
 }

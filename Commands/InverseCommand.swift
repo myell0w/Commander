@@ -26,11 +26,11 @@ public final class InverseCommand {
 
 extension InverseCommand: Command {
 
-    public func invoke() {
-        self.command.reverse()
+    public func invoke(context: InvocationContext?) {
+        self.command.reverse(context: context)
     }
 
-    public func reverse() {
-        self.command.invoke()
+    public func reverse(context: InvocationContext?) {
+        self.command.invoke(context: context)
     }
 }

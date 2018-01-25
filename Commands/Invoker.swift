@@ -28,7 +28,7 @@ public final class Invoker {
 
 extension Invoker: InvokeableHandler {
 
-    public func handleInvokeable(_ invokeable: Invokeable) {
-        invokeable.invoke()
+    public func handleInvokeable(_ invokeable: Invokeable, context: InvocationContext?) {
+        invokeable.invoke(context: context)
     }
 }

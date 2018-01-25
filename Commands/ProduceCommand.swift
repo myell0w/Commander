@@ -30,11 +30,11 @@ open class ProduceCommand {
 
 extension ProduceCommand: Command {
 
-    public func invoke() {
-        self.producedCommand.invoke()
+    public func invoke(context: InvocationContext?) {
+        self.producedCommand.invoke(context: context)
     }
 
-    public func reverse() {
-        self.producedCommand.reverse()
+    public func reverse(context: InvocationContext?) {
+        self.producedCommand.reverse(context: context)
     }
 }

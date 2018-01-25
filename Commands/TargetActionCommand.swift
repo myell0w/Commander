@@ -29,11 +29,11 @@ public final class TargetActionCommand {
 
 extension TargetActionCommand: Command {
 
-    public func invoke() {
+    public func invoke(context: InvocationContext? = nil) {
         _ = self.target?.perform(self.action)
     }
 
-    public func reverse() {
+    public func reverse(context: InvocationContext? = nil) {
         _ = self.target?.perform(self.reverseAction)
     }
 }

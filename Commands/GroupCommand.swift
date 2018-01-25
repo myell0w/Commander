@@ -33,11 +33,11 @@ extension GroupCommand: Command {
         return "<\(type(of: self))> {\n" + commandsDescription + "\n}"
     }
 
-    public func invoke() {
-        self.commands.forEach { $0.invoke() }
+    public func invoke(context: InvocationContext?) {
+        self.commands.forEach { $0.invoke(context: context) }
     }
 
-    public func reverse() {
-        self.commands.reversed().forEach { $0.reverse() }
+    public func reverse(context: InvocationContext?) {
+        self.commands.reversed().forEach { $0.reverse(context: context) }
     }
 }

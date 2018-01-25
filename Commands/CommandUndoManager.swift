@@ -9,7 +9,7 @@
 import Foundation
 
 
-public protocol CommandUndoManagerDelegate: class {
+public protocol CommandUndoManagerDelegate: AnyObject {
 
     func commandUndoManager(_ undoManager: CommandUndoManager, didUndoCommand command: Command)
     func commandUndoManager(_ undoManager: CommandUndoManager, didRedoCommand command: Command)
@@ -24,6 +24,7 @@ public final class CommandUndoManager {
         case redo
     }
 
+    private var invocationContexts: [ObjectIdentifier: InvocationContext] = [:]
     private(set) var commands: [Command] = []
     private(set) var undoneCommands: [Command] = []
 
@@ -50,7 +51,10 @@ public final class CommandUndoManager {
 
         let commandsToUndo = self.commands.remove(last: numberOfCommands).reversed()
         commandsToUndo.forEach { command in
-            command.reverse()
+            let invocationContext = self.invocationContext(for: command)
+            assert(invocationContext != nil, "Unable to retreive invocation context of command")
+
+            command.reverse(context: invocationContext)
             self.undoneCommands.append(command)
             self.delegate?.commandUndoManager(self, didUndoCommand: command)
         }
@@ -65,7 +69,10 @@ public final class CommandUndoManager {
 
         let commandsToRedo = self.undoneCommands.remove(last: numberOfCommands).reversed()
         commandsToRedo.forEach { command in
-            command.invoke()
+            let invocationContext = self.invocationContext(for: command)
+            assert(invocationContext != nil, "Unable to retreive invocation context of command")
+
+            command.invoke(context: invocationContext)
             self.commands.append(command)
             self.delegate?.commandUndoManager(self, didRedoCommand: command)
         }
@@ -74,6 +81,7 @@ public final class CommandUndoManager {
     public func reset() {
         self.commands.removeAll()
         self.undoneCommands.removeAll()
+        self.invocationContexts.removeAll()
     }
 }
 
@@ -81,15 +89,27 @@ public final class CommandUndoManager {
 
 extension CommandUndoManager: InvokeableHandler {
 
-    public func handleInvokeable(_ invokeable: Invokeable) {
+    public func handleInvokeable(_ invokeable: Invokeable, context: InvocationContext?) {
         guard let command = invokeable as? Command else { return }
         
         self.commands.append(command)
+        self.removeInvocationContexts(for: self.undoneCommands)
         self.undoneCommands.removeAll()
     }
 }
 
 // MARK: - Private
+
+private extension CommandUndoManager {
+
+    func invocationContext(for command: Command) -> InvocationContext? {
+        return self.invocationContexts[ObjectIdentifier(command)]
+    }
+
+    func removeInvocationContexts(for commands: [Command]) {
+        commands.map(ObjectIdentifier.init).forEach { self.invocationContexts.removeValue(forKey: $0) }
+    }
+}
 
 private extension Array {
 

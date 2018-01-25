@@ -9,11 +9,16 @@
 import Foundation
 
 
-public protocol DispatcherDelegate: class {
+public protocol DispatcherDelegate: AnyObject {
 
     func dispatcher(_ dispatcher: Dispatcher, willDispatchInvokeable invokeable: Invokeable)
     func dispatcher(_ dispatcher: Dispatcher, didDispatchInvokeable invokeable: Invokeable)
     func dispatcher(_ dispatcher: Dispatcher, didForbidInvokeable invokeable: Invokeable)
+}
+
+public protocol InvocationContextProvider: AnyObject {
+
+    func invocationContext(for invokable: Invokeable) -> InvocationContext?
 }
 
 
@@ -28,6 +33,7 @@ public final class Dispatcher {
 
     public var handlers: [InvokeableHandler]
     public weak var delegate: DispatcherDelegate?
+    public weak var invocationContextProvider: InvocationContextProvider?
     public private(set) var isDispatching: Bool = false
 
     // MARK: - Lifecycle
@@ -46,9 +52,11 @@ public final class Dispatcher {
     public func invoke(_ invokeable: Invokeable) {
         assert(Thread.isMainThread, "`invoke` must be called on the main thread")
 
+        let invocationContext = self.invocationContextProvider?.invocationContext(for: invokeable)
+
         guard self.isInTransaction == false else {
             assert(invokeable is Command, "Transactions are only supported for Commands")
-            self.transactionStore.handleInvokeable(invokeable)
+            self.transactionStore.handleInvokeable(invokeable, context: invocationContext)
             return
         }
 
@@ -61,7 +69,7 @@ public final class Dispatcher {
         self.delegate?.dispatcher(self, willDispatchInvokeable: invokeable)
 
         let handlers = self.handlers.filter { $0.isEnabled }
-        handlers.forEach { $0.handleInvokeable(invokeable) }
+        handlers.forEach { $0.handleInvokeable(invokeable, context: invocationContext) }
 
         self.delegate?.dispatcher(self, didDispatchInvokeable: invokeable)
         self.isDispatching = false

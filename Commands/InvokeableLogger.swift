@@ -30,7 +30,7 @@ public final class InvokeableLogger {
 
 extension InvokeableLogger: InvokeableHandler {
 
-    public func handleInvokeable(_ invokeable: Invokeable) {
+    public func handleInvokeable(_ invokeable: Invokeable, context: InvocationContext?) {
         let description = invokeable.description
 
         if let outputStream = self.outputStreamPointer {
